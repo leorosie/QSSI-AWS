@@ -172,7 +172,9 @@ void setup () {
 
   mode = rtc.readSqwPinMode();
   Serial.printf("Current i2c device mode: %x\n", (byte)mode);
-  // set up to handle interrupt from square wave / alarm pin
+  //esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_OFF);
+  esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
+  esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
   esp_deep_sleep_enable_ext0_wakeup(GPIO_NUM_39, 0);
   Serial.println("Entering deep sleep...");
   esp_deep_sleep_start();
