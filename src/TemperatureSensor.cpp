@@ -10,16 +10,17 @@ int8_t TemperatureSensor::setup(){
   DeviceAddress insideThermometer;
   pinMode(ONE_WIRE_BUS, INPUT);
   dt_sensor.begin();
-
-  //temperature sensor stuff
-  //Serial.print("Found ");
-  //Serial.print(dt_sensors.getDeviceCount(), DEC);
-  //Serial.println(" devices.");
-
   if (! this->dt_sensor.getAddress(insideThermometer, 0)) {
     Serial.println("Unable to find address for Device 0");
   }
   return(status);
+}
+
+uint8_t* TemperatureSensor::read(){
+  float tempC = this->dt_sensor.getTempC(insideThermometer);
+  uint8_t *array;
+  array = reinterpret_cast<uint8_t*>(&tempC);
+  return(array);
 }
 
 void TemperatureSensor::printTemperature() {

@@ -88,6 +88,10 @@ void setup () {
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
 
+  // Temperature sensor setup and read
+  TemperatureSensor ts;
+  ts.setup();
+  ts.read();
 
   //clear alarms before we initialize
   rtc.armAlarm(1, false);

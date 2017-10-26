@@ -24,6 +24,12 @@ public:
   /** Required method: read from the sensor
   *   Read from the initialized sensor and return its data.
   *
+  *   NOTE: another (possibly better) way of doing this is to pass in
+  *         a pointer (int8_t*), write in our bytes, then pass back
+  *         the length of the byte string (e.g. float -> 4 bytes).
+  *         As written, we may run the risk of screwing up data writes
+  *         since we're unsure about where to stop reading (?)
+  *
   *   @return pointer to first Byte
   */
   virtual uint8_t* read() = 0;
