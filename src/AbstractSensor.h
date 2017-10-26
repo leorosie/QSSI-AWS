@@ -5,7 +5,7 @@
 *   - they must be able to read
 */
 
-//#pragma once
+#pragma once
 
 #include <stdint.h>
 

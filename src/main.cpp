@@ -5,6 +5,7 @@
 #include "esp_deep_sleep.h"
 
 #include "TemperatureSensor.h"
+#include "SonicRangeSensor.h"
 
 /*
 TODO: write a function that takes an interval value and current time to make
@@ -14,16 +15,6 @@ an alarm for (time + interval) to get around the limitations of the chip
 RTC_DS3231 rtc;
 
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-
-const int snow=12;
-long sensor, mm, inches;
-
-void read_sensor() {
-  sensor=pulseIn(snow,HIGH);
-  mm=(sensor-498.0);
-  inches=mm/25.4;
-}
-
 
 void print_date(){
     DateTime now = rtc.now();
@@ -52,7 +43,6 @@ void handle_wakeup(){
     case 1  :
       Serial.println("Wakeup caused by external signal using RTC_IO (Interrupt from RTC)");
       print_date();
-      //read_sensor();
       break;
     case 2  :
       Serial.println("Wakeup caused by external signal using RTC_CNTL");
@@ -74,7 +64,6 @@ void handle_wakeup(){
 
 void setup () {
   Serial.begin(115200);
-  pinMode(snow, INPUT);
   Wire.begin();// this prevents some time weirdness from rtc
   delay(1000); // wait for console opening
   handle_wakeup(); //do whatever it is we do when we wake up
@@ -88,10 +77,18 @@ void setup () {
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
 
-  // Temperature sensor setup and read
+  // TemperatureSensor setup and read
   TemperatureSensor ts;
-  ts.setup();
-  ts.read();
+  int8_t status;
+  uint8_t* data;
+  status = ts.setup();
+  data = ts.read();
+  //Serial.println("Temperature: %u", *data);
+
+  // SonicRangeSensor setup and read
+  SonicRangeSensor srs;
+  status = srs.setup();
+  data = srs.read();
 
   //clear alarms before we initialize
   rtc.armAlarm(1, false);

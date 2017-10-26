@@ -1,8 +1,5 @@
 #include "TemperatureSensor.h"
 
-/**
-*
-*/
 int8_t TemperatureSensor::setup(){
   int8_t status = 0;
   OneWire oneWire(ONE_WIRE_BUS);
