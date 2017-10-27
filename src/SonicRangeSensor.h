@@ -1,10 +1,12 @@
+#pragma once
 #include "AbstractSensor.h"
+#include "main.h"
 
 #ifndef Arduino_h
 #include <Arduino.h>
 #endif
 
-#define SONIC_RANGER_BUS 12
+extern const int SONIC_RANGER_BUS;
 
 class SonicRangeSensor: public AbstractSensor {
 public:

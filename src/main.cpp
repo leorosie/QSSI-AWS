@@ -1,13 +1,4 @@
-#include <Arduino.h>
-#include <Wire.h>
-#include "esp_system.h"
-#include "esp_deep_sleep.h"
-
-#include "TemperatureSensor.h"
-#include "SonicRangeSensor.h"
-#include "RTC_container.h"
-
-#define WAKE_PIN GPIO_NUM_39
+#include "main.h"
 
 void handle_wakeup(RTC_container clock){
   esp_deep_sleep_wakeup_cause_t reason;
@@ -35,12 +26,6 @@ void handle_wakeup(RTC_container clock){
     }
 }
 
-/** Configure the chip and go to sleep.
-*
-*   This may be helpful in the event we want to make further changes to
-*   system state prior to entering sleep. As it is, we alrady need to
-*   make several configuration changes to get decent power consumption.
-*/
 void enter_sleep(){
   esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
   esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
@@ -52,7 +37,7 @@ void enter_sleep(){
 
 void setup () {
   Serial.begin(115200);
-  Wire.begin();// this prevents some time weirdness from rtc
+  Wire.begin(); // this prevents some time weirdness from rtc
   RTC_container clock;
   clock.setup();
   delay(1000); // wait for console opening

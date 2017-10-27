@@ -1,8 +1,10 @@
+#pragma once
 #include "AbstractSensor.h"
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include "main.h"
 
-#define ONE_WIRE_BUS 4
+extern const int ONE_WIRE_BUS;
 
 class TemperatureSensor: public AbstractSensor {
 public:

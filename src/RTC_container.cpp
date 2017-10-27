@@ -1,9 +1,11 @@
 #include "RTC_container.h"
 
 int8_t RTC_container::setup(){
+  int8_t status = 0;
   if (! rtc.begin()) {
     Serial.println("Couldn't find RTC");
-    while (1);
+    status = -1;
+    return(status);
   }
   if (rtc.lostPower()) {
     Serial.println("RTC lost power, lets set the time!");
@@ -32,6 +34,7 @@ int8_t RTC_container::setup(){
   rtc.clearAlarm(2);
   rtc.alarmInterrupt(2, false);
 
+  return(status);
 }
 
 void RTC_container::print_date(){

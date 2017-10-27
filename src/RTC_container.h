@@ -1,3 +1,5 @@
+#pragma once
+#include "pins.h"
 #include "RTClibExtended.h"
 
 class RTC_container {
@@ -24,7 +26,7 @@ TODO: write a function that takes an interval value and current time to make
 an alarm for (time + interval) to get around the limitations of the chip
 */
   int8_t set_next_alarm(int8_t seconds);
-  
+
 private:
   RTC_DS3231 rtc;
   char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
