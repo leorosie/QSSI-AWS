@@ -8,16 +8,27 @@
 
 extern const int SONIC_RANGER_BUS;
 
+/**
+ * \class SonicRangeSensor
+ * \brief a simple interface to a pulse-measuring sensor.
+ *
+ * Our new sonic range sensor is fairly simple to use but it should
+ * behave just like any other sensor. This ensures it acts according to
+ * established design criteria.
+ */
 class SonicRangeSensor: public AbstractSensor {
 public:
 
-  /** Set up the sonic ranger.
+  /**
+  * \brief Set up the sonic ranger.
   *
   */
   int8_t setup();
 
-  /** Read from the sonic ranger.
-  *   NOTE: see AbstractSensor for discussion on this method.
+  /**
+  * \brief Read from the sonic ranger.
+  *
+  * NOTE: see AbstractSensor for discussion on this method.
   *
   */
   uint8_t* read();

@@ -33,4 +33,4 @@ public:
   *   @return pointer to first Byte
   */
   virtual uint8_t* read() = 0;
-} ;
+};

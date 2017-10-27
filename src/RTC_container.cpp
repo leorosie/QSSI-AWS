@@ -57,7 +57,7 @@ void RTC_container::print_date(){
     Serial.println();
 }
 
-// TODO fill out this methos
+// TODO fill out this method
 int8_t RTC_container::set_next_alarm(int8_t seconds){
   int8_t status = 0;
   return(status);
