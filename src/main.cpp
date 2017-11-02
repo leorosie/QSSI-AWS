@@ -55,11 +55,12 @@ void setup () {
 
 
   // SonicRangeSensor setup and read
+  // TODO: utils.h function for long->byte[]; then use here.
   SonicRangeSensor srs;
-  data = (uint8_t*)malloc(1 * sizeof(uint8_t));
+  data = (uint8_t*)malloc(1 * sizeof(long));
   status = srs.setup();
   len = srs.read(data);
-  Serial.printf("Sonic Range value: %u\n", *data);
+  Serial.printf("Sonic Range value: %u\n", *data); // number issues
   free(data);
 
   enter_sleep();

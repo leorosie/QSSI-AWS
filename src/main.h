@@ -9,10 +9,10 @@
 #include "utils.h"
 
 /** Handle any wakeup event (including power on).
-*   @param clock an RTC_container object, which contains methods that are
+*   \param clock an RTC_container object, which contains methods that are
 *          useful for timed events.
-*   @see RTC_container::print_date()
-*   @return void
+*   \see RTC_container::print_date()
+*   \return void
 */
 void handle_wakeup(RTC_container);
 

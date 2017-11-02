@@ -18,6 +18,10 @@
 *   \brief Pin used in communication with one-wire temperature sensor.
 */
 
+/*
+* TODO: add pins for SD card, pyranometer, camera
+*/
+
 const gpio_num_t WAKE_PIN = GPIO_NUM_39;
 const int SONIC_RANGER_BUS = 12;
 const int ONE_WIRE_BUS = 14;

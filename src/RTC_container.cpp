@@ -8,8 +8,7 @@ int8_t RTC_container::setup(){
     return(status);
   }
   if (rtc.lostPower()) {
-    Serial.println("RTC lost power, lets set the time!");
-    // following line sets the RTC to the date & time this sketch was compiled
+    Serial.println("RTC lost power; resetting to compile time.");
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
 

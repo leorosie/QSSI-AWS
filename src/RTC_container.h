@@ -24,16 +24,16 @@ public:
   /**
   *   \brief Prepare the RTC for operation.
   *
-  *   \return status an int (0 -> success, -1 -> error)
+  *   \return status An int (0 -> success, -1 -> error)
   */
   int8_t setup();
 
   /**
   *   \brief Set the next alarm to wake up the chip.
   *
-  *   \param seconds a count of seconds from current time at which the
+  *   \param seconds A count of seconds from current time at which the
   *          next alarm should be set.
-  *   \return status an int (0 -> success, -1 -> error)
+  *   \return status An int (0 -> success, -1 -> error)
   *
   *   This is here to get us around the limitations of the
   *   RTC which can only take one second intervals or some
