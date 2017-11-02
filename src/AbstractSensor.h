@@ -30,7 +30,9 @@ public:
   *         As written, we may run the risk of screwing up data writes
   *         since we're unsure about where to stop reading (?)
   *
-  *   @return pointer to first Byte
+  *   NOTE: ok, i'm making that change. wish me luck.
+  *
+  *   @return uint8_t length of byte string that needs to be read.
   */
-  virtual uint8_t* read() = 0;
+  virtual uint8_t read(uint8_t* address) = 0;
 };

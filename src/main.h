@@ -6,6 +6,7 @@
 #include "TemperatureSensor.h"
 #include "SonicRangeSensor.h"
 #include "RTC_container.h"
+#include "utils.h"
 
 /** Handle any wakeup event (including power on).
 *   @param clock an RTC_container object, which contains methods that are

@@ -31,5 +31,5 @@ public:
   * NOTE: see AbstractSensor for discussion on this method.
   *
   */
-  uint8_t* read();
+  uint8_t read(uint8_t* address);
 };

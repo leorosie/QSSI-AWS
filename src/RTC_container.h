@@ -1,4 +1,5 @@
 #pragma once
+
 #include "pins.h"
 #include "RTClibExtended.h"
 
@@ -6,7 +7,7 @@
  * \class RTC_container
  * \brief Wraps the RTC_DS3231 object for ease of use.
  *
- * As written, the RTC_DS3231 lacks some features we would like for 
+ * As written, the RTC_DS3231 lacks some features we would like for
  * our project, such as a dedicated timestamp method and a simple
  * repeating alarm system. In addition, we want to simplify the
  * setup procedure into a smaller call.
@@ -43,7 +44,7 @@ public:
 private:
 
   /**
-  *  \var RTC_DS3231 rtc 
+  *  \var RTC_DS3231 rtc
   *
   *  \brief A real-time clock object.
   *

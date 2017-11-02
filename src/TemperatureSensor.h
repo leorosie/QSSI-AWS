@@ -3,6 +3,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include "main.h"
+#include "utils.h"
 
 extern const int ONE_WIRE_BUS;
 
@@ -31,53 +32,21 @@ public:
   *
   * NOTE: see AbstractSensor for discussion on this method.
   */
-  uint8_t* read();
-
-  /**
-  * \brief Print the temperature in both C and F.
-  *
-  */
-  void printTemperature();
-
-  /**
-  * \brief Print the device address of this sensor.
-  *
-  */
-  void printAddress();
-
-  /**
-  * \brief Print any alarms set on this sensor.
-  *
-  */
-  void printAlarms();
-
-  /**
-  * \brief Print the alarms, address, and temperature.
-  *
-  */
-  void printData();
-
-  /**
-  * \brief Print alarm data and more.
-  *
-  * TODO: figure out why this is here.
-  *
-  */
-  void checkAlarm();
+  uint8_t read(uint8_t* address);
 
 private:
-
-  /**
-   * \var DeviceAddress insideThermometer
-   *
-   * \brief The location on the OneWire bus where this thermometer is found.
-   */
-  DeviceAddress insideThermometer;
 
   /**
    * \var DallasTemperature dt_sensor
    *
    * \brief Gives access to information over the OneWire bus.
    */
-  DallasTemperature dt_sensor;
+  DallasTemperature * dt_sensor;
+
+  /**
+   * \var OneWire oneWire
+   *
+   * \brief Handles addressing of sensors.
+   */
+  OneWire * oneWire;
 };

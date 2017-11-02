@@ -46,15 +46,21 @@ void setup () {
   // TemperatureSensor setup and read
   TemperatureSensor ts;
   int8_t status;
-  uint8_t* data;
+  uint8_t len;
+  uint8_t* data = (uint8_t*)malloc(4 * sizeof(uint8_t));
   status = ts.setup();
-  data = ts.read();
-  //Serial.println("Temperature: %u", *data);
+  len = ts.read(data);
+  Serial.printf("Temperature value: %f\n", bytes_to_float(data));
+  free(data);
+
 
   // SonicRangeSensor setup and read
   SonicRangeSensor srs;
+  data = (uint8_t*)malloc(1 * sizeof(uint8_t));
   status = srs.setup();
-  data = srs.read();
+  len = srs.read(data);
+  Serial.printf("Sonic Range value: %u\n", *data);
+  free(data);
 
   enter_sleep();
 }

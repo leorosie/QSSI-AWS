@@ -20,4 +20,4 @@
 
 const gpio_num_t WAKE_PIN = GPIO_NUM_39;
 const int SONIC_RANGER_BUS = 12;
-const int ONE_WIRE_BUS = 4;
+const int ONE_WIRE_BUS = 14;
