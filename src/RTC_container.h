@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pins.h"
+#include <Wire.h>
 #include "RTClibExtended.h"
 
 /**
@@ -14,6 +15,18 @@
  */
 class RTC_container {
 public:
+
+  /**
+  *   \brief Update RTC date/time if needed.
+  *
+  *   \return status An int (0 -> no change, 1 -> change, other -> error)
+  *
+  *   This check will only take place when the system isn't woken up
+  *   from deep sleep (e.g. it is first powered on).
+  *   TODO are there other cases we need to check?
+  */
+
+  int8_t check_datetime();
 
   /**
   *   \brief Print out the current time.
@@ -39,7 +52,7 @@ public:
   *   RTC which can only take one second intervals or some
   *   future time to set an alarm.
   */
-  int8_t set_next_alarm(int8_t seconds);
+  int8_t set_next_alarm(int32_t seconds, int8_t alarm_num);
 
 private:
 

@@ -22,6 +22,8 @@ void handle_wakeup(RTC_container clock){
       break;
     default :
       Serial.println("Wakeup was not caused by deep sleep");
+      int8_t clock_status;
+      clock_status = clock.check_datetime();
       break;
     }
 }
@@ -38,10 +40,10 @@ void enter_sleep(){
 void setup () {
   Serial.begin(115200);
   Wire.begin(); // this prevents some time weirdness from rtc
-  RTC_container clock;
-  clock.setup();
   delay(1000); // wait for console opening
+  RTC_container clock;
   handle_wakeup(clock); //do whatever it is we do when we wake up
+  clock.setup();
 
   // TemperatureSensor setup and read
   TemperatureSensor ts;
