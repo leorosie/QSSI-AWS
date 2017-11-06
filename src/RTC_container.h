@@ -25,14 +25,14 @@ public:
   *   from deep sleep (e.g. it is first powered on).
   *   TODO are there other cases we need to check?
   */
-
   int8_t check_datetime();
 
   /**
-  *   \brief Print out the current time.
+  *   \brief Print out the contents of a DateTime (human readable).
+  *   \param t A DateTime object.
   *
   */
-  void print_date();
+  void print_date(DateTime t);
 
   /**
   *   \brief Prepare the RTC for operation.
@@ -74,4 +74,14 @@ private:
   *   field operations.
   */
   char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+
+  /**
+  *   \var sleep_time
+  *   \brief Sleep time in seconds between sensor readings
+  *
+  *   The RTC sends a signal to wake the chip so that it can take readings
+  *   from the sensors. This field sets the length of time between signals.
+  *
+  */
+  int32_t sleep_time;
 };

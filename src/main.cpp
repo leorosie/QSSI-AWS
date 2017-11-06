@@ -6,7 +6,7 @@ void handle_wakeup(RTC_container clock){
   switch(reason){
     case 1  :
       Serial.println("Wakeup caused by external signal using RTC_IO (Interrupt from RTC)");
-      clock.print_date();
+      //clock.print_date();
       break;
     case 2  :
       Serial.println("Wakeup caused by external signal using RTC_CNTL");
