@@ -6,6 +6,7 @@
 #include "TemperatureSensor.h"
 #include "SonicRangeSensor.h"
 #include "RTC_container.h"
+#include "NVS_container.h"
 #include "utils.h"
 
 /** Handle any wakeup event (including power on).
