@@ -66,7 +66,6 @@ void setup () {
 
 
   // SonicRangeSensor setup and read
-  // TODO: utils.h function for long->byte[]; then use here.
   SonicRangeSensor srs;
   status = srs.setup();
   len = srs.read(data);
