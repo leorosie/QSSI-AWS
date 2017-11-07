@@ -41,6 +41,7 @@ public:
   */
   int8_t set_next_alarm(int8_t seconds);
 
+  RTC_DS3231 rtc; //TODO unfuck this
 private:
 
   /**
@@ -51,7 +52,7 @@ private:
   *  An instance of a RTC_DS3231, capable of sending both
   *       square waves and interrupts to a pin on the board.
   */
-  RTC_DS3231 rtc;
+  //RTC_DS3231 rtc;
 
   /**
   *   \var char[][] daysOfTheWeek
