@@ -5,15 +5,32 @@ class NVS_container {
 public:
 
   /**
+  * \brief Setup for use.
+  * \return status (0 -> success, -1 -> failure)
+  *
+  * If there is no counter in the NVS, make it now. Make namespace. Zero data.
+  * Do anything we need to ensure we're ready for reading/writing.
+  */
+  uint8_t setup();
+
+  /**
+  * \brief Close before system reset.
+  * \return status (0 -> success, -1 -> failure)
+  *
+  * Fix counter, disable NVS connection, etc.
+  */
+  uint8_t close();
+
+  /**
   * \brief Get a value from NVS.
+  * \param index Identifier for NVS key.
   * \return status (0 -> success, -1 -> failure)
   *
   * This will pull out data from NVS and hand it to us in a usable format: as
   * members of our data `struct`. Make sure you get it out before you call it
   * again!
-  *
   */
-  int8_t read_data();
+  uint8_t read_data(uint16_t index);
 
   /**
   * \brief Write a value to NVS.
@@ -23,7 +40,7 @@ public:
   * that everything needs to be written into the struct before we call this
   * method...
   */
-  int8_t write_data();
+  uint8_t write_data();
 
   /**
   * \brief Zero the data `struct`.
@@ -31,7 +48,7 @@ public:
   *
   * This will simply zero the array for our next use.
   */
-  int8_t zero_data();
+  uint8_t zero_data();
 
   /**
   * \var data
@@ -40,12 +57,12 @@ public:
   * This wraps all of our sensors and timestamp into a single package.
   * We use it for reading/writing purposes.
   */
-  struct data {
+  struct Data {
     uint8_t time_buf [64];
     uint8_t temp_buf [64];
-    uint8_t srs_buf  [64];
+    uint8_t snow_buf [64];
     uint8_t pyro_buf [64];
-  };
+  } data;
 
 private:
 
@@ -56,7 +73,7 @@ private:
   * Internal method to fetch the NVS counter when we wake up. This is needed
   * to check whether we need to write out to SD card, name keys, etc.
   */
-  int8_t get_counter();
+  uint8_t get_counter();
 
   /**
   * \brief Set the counter in NVS.
@@ -65,7 +82,7 @@ private:
   * Internal method to update the NVS counter before going to sleep. This is
   * how we keep track of the number of records we currenly have.
   */
-  int8_t set_counter();
+  uint8_t set_counter();
 
   /**
   * \var Preferences accessor
