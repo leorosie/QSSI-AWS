@@ -1,6 +1,6 @@
 #include "main.h"
 
-void handle_wakeup(RTC_container clock){
+/*void handle_wakeup(RTC_container clock){
   esp_deep_sleep_wakeup_cause_t reason;
   reason = esp_deep_sleep_get_wakeup_cause();
   switch(reason){
@@ -35,7 +35,7 @@ void enter_sleep(){
   Serial.println("Entering deep sleep...");
   esp_deep_sleep_start();
   Serial.println("If printed, system is not asleep.");
-}
+} */
 
 void setup () {
   Serial.begin(115200);
@@ -86,8 +86,14 @@ void setup () {
   }
   nvs.close();
 
-  enter_sleep();
-}
+  PyranometerSensor ps;
+  data = (uint8_t*)malloc(8 * sizeof(uint8_t));
+  status = ps.setup();
+  len = ps.read(data);
+  Serial.printf("Pyranometer value: %u\n", bytes_to_long(data));
+  free(data);
 
-void loop () {
+  delay(5000);
+
+
 }

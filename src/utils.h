@@ -44,3 +44,26 @@ inline float bytes_to_float(uint8_t* address){
   f = u.float_bytes;
   return(f);
 }
+
+inline uint8_t long_to_bytes(uint8_t* address, long long_val){
+  union {
+    long long_bytes;
+    uint8_t sonic_array[8];
+  } u;
+  u.long_bytes = long_val;
+  memcpy(address, u.sonic_array, 8);
+  return(sizeof(u.sonic_array));
+  //LOOK INTO:
+  //return(u.long_bytes); QC and returns weird number for sonic ranger
+}
+
+inline long bytes_to_long(uint8_t* address){
+  union {
+    long long_bytes;
+    uint8_t sonic_array[8];
+  } u;
+  long l;
+  memcpy(u.sonic_array, address, 8);
+  l = u.long_bytes;
+  return(l);
+}
