@@ -46,6 +46,16 @@ void setup () {
   clock.setup();
 
   // TemperatureSensor setup and read
+
+
+  //enter_sleep();
+}
+
+void loop () {
+
+
+
+
   TemperatureSensor ts;
   int8_t status;
   uint8_t len;
@@ -57,16 +67,21 @@ void setup () {
 
 
   // SonicRangeSensor setup and read
-  // TODO: utils.h function for long->byte[]; then use here.
   SonicRangeSensor srs;
   data = (uint8_t*)malloc(1 * sizeof(long));
   status = srs.setup();
   len = srs.read(data);
-  Serial.printf("Sonic Range value: %u\n", *data); // number issues
+  Serial.printf("Sonic Range value: %u\n", bytes_to_long(data));
   free(data);
 
-  enter_sleep();
-}
+  PyranometerSensor ps;
+  data = (uint8_t*)malloc(8 * sizeof(uint8_t));
+  status = ps.setup();
+  len = ps.read(data);
+  Serial.printf("Pyranometer value: %u\n", bytes_to_long(data));
+  free(data);
 
-void loop () {
+  delay(5000);
+
+
 }
