@@ -45,6 +45,12 @@ void setup () {
   handle_wakeup(clock); //do whatever it is we do when we wake up
   clock.setup();
 
+  //NVS_container setup
+  NVS_container nvs;
+  nvs.setup();
+  long clock_data =clock.rtc.now().secondstime();
+  memcpy(nvs.data.time_buf, &clock_data, sizeof(clock_data));
+
   // TemperatureSensor setup and read
   TemperatureSensor ts;
   int8_t status;
@@ -53,6 +59,7 @@ void setup () {
   status = ts.setup();
   len = ts.read(data);
   Serial.printf("Temperature value: %f\n", bytes_to_float(data));
+  memcpy(nvs.data.temp_buf,data, sizeof(data));
   free(data);
 
 
@@ -64,6 +71,12 @@ void setup () {
   len = srs.read(data);
   Serial.printf("Sonic Range value: %u\n", *data); // number issues
   free(data);
+
+  nvs.write_data();
+  nvs.zero_data();
+  nvs.read_data(1);
+  Serial.printf("First recorded value: %f\n", bytes_to_float(nvs.data.temp_buf));
+  nvs.close();
 
   enter_sleep();
 }
