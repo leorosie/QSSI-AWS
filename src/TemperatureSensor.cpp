@@ -14,5 +14,6 @@ uint8_t TemperatureSensor::read(uint8_t* address){
   float tempC = this->dt_sensor->getTempCByIndex(0);
   uint8_t len;
   len = float_to_bytes(address, tempC);
+  Serial.println(len);
   return(len);
 }

@@ -1,6 +1,6 @@
 #include "main.h"
 
-void handle_wakeup(RTC_container clock){
+/*void handle_wakeup(RTC_container clock){
   esp_deep_sleep_wakeup_cause_t reason;
   reason = esp_deep_sleep_get_wakeup_cause();
   switch(reason){
@@ -33,17 +33,27 @@ void enter_sleep(){
   Serial.println("Entering deep sleep...");
   esp_deep_sleep_start();
   Serial.println("If printed, system is not asleep.");
-}
+} */
 
 void setup () {
   Serial.begin(115200);
   Wire.begin(); // this prevents some time weirdness from rtc
-  RTC_container clock;
-  clock.setup();
+  //RTC_container clock;
+  //clock.setup();
   delay(1000); // wait for console opening
-  handle_wakeup(clock); //do whatever it is we do when we wake up
+  //handle_wakeup(clock); //do whatever it is we do when we wake up
 
   // TemperatureSensor setup and read
+
+
+  //enter_sleep();
+}
+
+void loop () {
+
+
+
+
   TemperatureSensor ts;
   int8_t status;
   uint8_t len;
@@ -53,17 +63,21 @@ void setup () {
   Serial.printf("Temperature value: %f\n", bytes_to_float(data));
   free(data);
 
-
-  // SonicRangeSensor setup and read
   SonicRangeSensor srs;
-  data = (uint8_t*)malloc(1 * sizeof(uint8_t));
+   data = (uint8_t*)malloc(8 * sizeof(uint8_t));
   status = srs.setup();
   len = srs.read(data);
-  Serial.printf("Sonic Range value: %u\n", *data);
+  Serial.printf("Sonic Range value: %u\n", bytes_to_long(data));
   free(data);
 
-  enter_sleep();
-}
+  PyranometerSensor ps;
+  data = (uint8_t*)malloc(8 * sizeof(uint8_t));
+  status = ps.setup();
+  len = ps.read(data);
+  Serial.printf("Pyranometer value: %u\n", bytes_to_long(data));
+  free(data);
 
-void loop () {
+  delay(5000);
+
+
 }

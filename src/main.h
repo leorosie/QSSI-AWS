@@ -5,6 +5,7 @@
 
 #include "TemperatureSensor.h"
 #include "SonicRangeSensor.h"
+#include "PyranometerSensor.h"
 #include "RTC_container.h"
 #include "utils.h"
 
