@@ -65,8 +65,6 @@ void loop () {
   Serial.printf("Temperature value: %f\n", bytes_to_float(data));
   free(data);
 
-
-  // SonicRangeSensor setup and read
   SonicRangeSensor srs;
   data = (uint8_t*)malloc(1 * sizeof(long));
   status = srs.setup();
