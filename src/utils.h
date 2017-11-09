@@ -2,7 +2,8 @@
 #include <cstring>
 #include <stdint.h>
 
-//NOTE i haven't checked the validity of FLOAT_SIZE. use at your own risk!
+const uint8_t FLOAT_SIZE = sizeof(float);
+const uint8_t LONG_SIZE = sizeof(long);
 
 /**
 *  \brief Convert a float to an array of bytes.
@@ -16,7 +17,6 @@
 *  but it's reliable.
 */
 inline uint8_t float_to_bytes(uint8_t* address, float float_val){
-  const uint8_t FLOAT_SIZE = sizeof(float);
   union {
     float float_bytes;
     uint8_t temp_array[FLOAT_SIZE];
@@ -35,7 +35,6 @@ inline uint8_t float_to_bytes(uint8_t* address, float float_val){
 *  this is mostly for debugging purposes; it shouldn't be needed in operation.
 */
 inline float bytes_to_float(uint8_t* address){
-  const uint8_t FLOAT_SIZE = sizeof(float);
   union {
     float float_bytes;
     uint8_t temp_array[FLOAT_SIZE];

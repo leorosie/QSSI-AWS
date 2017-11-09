@@ -23,7 +23,8 @@ int8_t RTC_container::setup(){
   //set mode; set alarm; arm interrupt
   //TODO: change to set next alarm on interval from current time
   rtc.writeSqwPinMode(DS3231_OFF);
-  rtc.setAlarm(ALM1_MATCH_SECONDS, 0, 0, 0, 0);
+  //rtc.setAlarm(ALM1_MATCH_SECONDS, 0, 0, 0, 0);
+  rtc.setAlarm(ALM1_EVERY_SECOND, 0, 0, 0, 0);
   rtc.alarmInterrupt(1, true);
 
   return(status);

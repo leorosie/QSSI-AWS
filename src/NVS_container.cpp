@@ -7,7 +7,7 @@ uint8_t NVS_container::setup(){
   uint8_t sub_status = this->get_counter();
   if(sub_status != 0){
     Serial.println("no existing counter; making it now");
-    this->accessor.putShort("counter", 1);
+    this->accessor.putShort("counter", 0);
   }
   return(status);
 }
@@ -48,19 +48,23 @@ uint8_t NVS_container::write_data(){
   // timestamp
   char key_str[] = "time_%hd";
   sprintf(key_buf, key_str, this->counter);
-  this->accessor.putBytes(key_buf,this->data.time_buf,sizeof(this->data.time_buf));
+  //this->accessor.putBytes(key_buf,this->data.time_buf,sizeof(this->data.time_buf));
+  this->accessor.putBytes(key_buf,this->data.time_buf,LONG_SIZE);
   // temperature
   strcpy(key_str, "temp_%hd");
   sprintf(key_buf, key_str, this->counter);
-  this->accessor.putBytes(key_buf,this->data.temp_buf,sizeof(this->data.time_buf));
+  //this->accessor.putBytes(key_buf,this->data.temp_buf,sizeof(this->data.time_buf));
+  this->accessor.putBytes(key_buf,this->data.temp_buf,FLOAT_SIZE);
   // snow depth
   strcpy(key_str, "snow_%hd");
   sprintf(key_buf, key_str, this->counter);
-  this->accessor.putBytes(key_buf,this->data.snow_buf,sizeof(this->data.snow_buf));
+  //this->accessor.putBytes(key_buf,this->data.snow_buf,sizeof(this->data.snow_buf));
+  this->accessor.putBytes(key_buf,this->data.snow_buf,LONG_SIZE);
   // pyranometer
   strcpy(key_str, "pyro_%hd");
   sprintf(key_buf, key_str, this->counter);
-  this->accessor.putBytes(key_buf,this->data.pyro_buf,sizeof(this->data.pyro_buf));
+  //this->accessor.putBytes(key_buf,this->data.pyro_buf,sizeof(this->data.pyro_buf));
+  this->accessor.putBytes(key_buf,this->data.pyro_buf,LONG_SIZE);
   // increment counter since we just wrote in another entry
   ++this->counter;
   return(status);
@@ -96,5 +100,9 @@ uint8_t NVS_container::clear(){
   bool is_cleared;
   is_cleared = this->accessor.clear();
   status = is_cleared ? 0 : -1;
+  if(status == 0){
+    this->counter = 0;
+    this->set_counter();
+  }
   return(status);
 }

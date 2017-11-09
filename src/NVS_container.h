@@ -1,5 +1,9 @@
 #pragma once
 #include <Preferences.h>
+#include "utils.h"
+
+extern const uint8_t FLOAT_SIZE;
+extern const uint8_t LONG_SIZE;
 
 class NVS_container {
 public:
