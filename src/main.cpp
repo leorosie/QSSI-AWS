@@ -76,6 +76,7 @@ void setup () {
   nvs.zero_data();
   nvs.read_data(1);
   Serial.printf("First recorded value: %f\n", bytes_to_float(nvs.data.temp_buf));
+  //nvs.clear();
   nvs.close();
 
   enter_sleep();
