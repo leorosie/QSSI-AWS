@@ -51,6 +51,15 @@ public:
   uint8_t zero_data();
 
   /**
+  * \brief Clear all entries from NVS.
+  * \return status (0 -> success, -1 -> failure)
+  *
+  * This is the last step of writing our data to SD card: we must make sure
+  * that NVS is empty so we can write to it again.
+  */
+  uint8_t clear();
+
+  /**
   * \var data
   * \brief All fields of a single timepoint observation.
   *

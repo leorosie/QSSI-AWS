@@ -90,3 +90,11 @@ uint8_t NVS_container::set_counter(){
   this->accessor.putShort("counter",this->counter);
   return(status);
 }
+
+uint8_t NVS_container::clear(){
+  uint8_t status = 0;
+  bool is_cleared;
+  is_cleared = this->accessor.clear();
+  status = is_cleared ? 0 : -1;
+  return(status);
+}
