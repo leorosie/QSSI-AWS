@@ -3,10 +3,11 @@
 #include "esp_system.h"
 #include "esp_deep_sleep.h"
 
+#include "utils.h"
 #include "TemperatureSensor.h"
 #include "SonicRangeSensor.h"
 #include "RTC_container.h"
-#include "utils.h"
+#include "NVS_container.h"
 
 /** Handle any wakeup event (including power on).
 *   \param clock an RTC_container object, which contains methods that are
