@@ -32,7 +32,12 @@ int8_t RTC_container::setup(){
   rtc.alarmInterrupt(2, false);
   //set mode; set alarm; arm interrupt
   rtc.writeSqwPinMode(DS3231_OFF);
+<<<<<<< HEAD
   this->set_next_alarm(this->sleep_time, 1);
+=======
+  //rtc.setAlarm(ALM1_MATCH_SECONDS, 0, 0, 0, 0);
+  rtc.setAlarm(ALM1_EVERY_SECOND, 0, 0, 0, 0);
+>>>>>>> c1c06ce7acfcc31b2d99a1c3bbfe6fee0c8108f7
   rtc.alarmInterrupt(1, true);
   return(status);
 }

@@ -51,6 +51,12 @@ void setup () {
   long clock_data =clock.rtc.now().secondstime();
   memcpy(nvs.data.time_buf, &clock_data, sizeof(clock_data));
 
+  //NVS_container setup
+  NVS_container nvs;
+  nvs.setup();
+  long clock_data =clock.rtc.now().secondstime();
+  memcpy(nvs.data.time_buf, &clock_data, sizeof(clock_data));
+
   // TemperatureSensor setup and read
   TemperatureSensor ts;
   int8_t status;
