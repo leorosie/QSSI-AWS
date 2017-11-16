@@ -1,8 +1,7 @@
 #include "pins.h"
 #include <Wire.h>
-#include "esp_system.h"
-#include "esp_deep_sleep.h"
 
+#include "PowerState.h"
 #include "utils.h"
 #include "TemperatureSensor.h"
 #include "SonicRangeSensor.h"
@@ -16,15 +15,6 @@
 *   \return void
 */
 void handle_wakeup(RTC_container);
-
-/** Perform any necessary configurations and enter deep sleep.
-*
-*   This method may undergo changes depending on microcontroller architecture
-*   and board functionality; for example, ESP32 Thing requires both slow and
-*   fast memory to be disabled to achieve optimal performance.
-*
-*/
-void enter_sleep();
 
 /** Arduino-required routine runs when powered on.
 *

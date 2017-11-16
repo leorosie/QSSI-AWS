@@ -28,22 +28,16 @@ void handle_wakeup(RTC_container clock){
     }
 }
 
-void enter_sleep(){
-  esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
-  esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
-  esp_deep_sleep_enable_ext0_wakeup(WAKE_PIN, 0);
-  Serial.println("Entering deep sleep...");
-  esp_deep_sleep_start();
-  Serial.println("If printed, system is not asleep.");
-}
-
 void setup () {
+  PowerState state;
   Serial.begin(115200);
   Wire.begin();
   delay(1000); // wait for console opening
   RTC_container clock;
   handle_wakeup(clock); //do whatever it is we do when we wake up
   clock.setup();
+  int8_t state_status;
+  state_status = state.enter_sensor_state();
 
   //define some variables for use in this function
   int8_t status;
@@ -59,6 +53,7 @@ void setup () {
   // TemperatureSensor setup and read
   TemperatureSensor ts;
   status = ts.setup();
+  delay(100);
   len = ts.read(data);
   Serial.printf("Temperature value: %f\n", bytes_to_float(data));
   memcpy(nvs.data.temp_buf, &data, len);
@@ -86,7 +81,7 @@ void setup () {
   }
   nvs.close();
 
-  enter_sleep();
+  state.enter_sleep();
 }
 
 void loop () {
