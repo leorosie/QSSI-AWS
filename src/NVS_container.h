@@ -5,6 +5,11 @@
 extern const uint8_t FLOAT_SIZE;
 extern const uint8_t LONG_SIZE;
 
+/** \var MAX_NVS_COUNTER
+*   \brief Max number of entries in NVS before we move data to SD card.
+*/
+const uint8_t MAX_NVS_COUNTER = 48;
+
 class NVS_container {
 public:
 
@@ -64,6 +69,14 @@ public:
   uint8_t clear();
 
   /**
+  * \brief Give the current value of the counter in memory.
+  * \return counter The current counter of the object.
+  *
+  * This is needed to check whether it's time to move data from NVS -> SD.
+  */
+  uint16_t get_counter();
+
+  /**
   * \var data
   * \brief All fields of a single timepoint observation.
   *
@@ -86,7 +99,7 @@ private:
   * Internal method to fetch the NVS counter when we wake up. This is needed
   * to check whether we need to write out to SD card, name keys, etc.
   */
-  uint8_t get_counter();
+  uint8_t read_counter();
 
   /**
   * \brief Set the counter in NVS.
@@ -95,7 +108,7 @@ private:
   * Internal method to update the NVS counter before going to sleep. This is
   * how we keep track of the number of records we currenly have.
   */
-  uint8_t set_counter();
+  uint8_t write_counter();
 
   /**
   * \var Preferences accessor

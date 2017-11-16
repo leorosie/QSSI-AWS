@@ -4,7 +4,7 @@ uint8_t NVS_container::setup(){
   uint8_t status;
   this->accessor.begin("AWS_data", false);
   this->zero_data();
-  uint8_t sub_status = this->get_counter();
+  uint8_t sub_status = this->read_counter();
   if(sub_status != 0){
     Serial.println("no existing counter; making it now");
     this->accessor.putShort("counter", 0);
@@ -14,7 +14,7 @@ uint8_t NVS_container::setup(){
 
 uint8_t NVS_container::close(){
   uint8_t status;
-  this->set_counter();
+  this->write_counter();
   this->accessor.end();
   return(status);
 }
@@ -79,7 +79,11 @@ uint8_t NVS_container::zero_data(){
   return(status);
 }
 
-uint8_t NVS_container::get_counter(){
+uint16_t NVS_container::get_counter(){
+  return(this->counter);
+}
+
+uint8_t NVS_container::read_counter(){
   uint8_t status = 0;
   this->counter = this->accessor.getShort("counter",0); //0 -> not found
   if(this->counter == 0){
@@ -88,7 +92,7 @@ uint8_t NVS_container::get_counter(){
   return(status);
 }
 
-uint8_t NVS_container::set_counter(){
+uint8_t NVS_container::write_counter(){
   uint8_t status;
   Serial.printf("Writing out counter as %hd\n",this->counter);
   this->accessor.putShort("counter",this->counter);
@@ -102,7 +106,7 @@ uint8_t NVS_container::clear(){
   status = is_cleared ? 0 : -1;
   if(status == 0){
     this->counter = 0;
-    this->set_counter();
+    this->write_counter();
   }
   return(status);
 }
