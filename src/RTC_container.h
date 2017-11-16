@@ -54,7 +54,7 @@ public:
   */
   int8_t set_next_alarm(int32_t seconds, int8_t alarm_num);
 
-  RTC_DS3231 rtc; //TODO unfuck this
+  RTC_DS3231 rtc;
 private:
 
   /**
