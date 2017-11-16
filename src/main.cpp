@@ -39,11 +39,16 @@ void enter_sleep(){
 
 void setup () {
   Serial.begin(115200);
-  Wire.begin(); // this prevents some time weirdness from rtc
+  Wire.begin();
   delay(1000); // wait for console opening
   RTC_container clock;
   handle_wakeup(clock); //do whatever it is we do when we wake up
   clock.setup();
+
+  //define some variables for use in this function
+  int8_t status;
+  uint8_t len;
+  uint8_t data[64];
 
   //NVS_container setup
   NVS_container nvs;
@@ -53,24 +58,21 @@ void setup () {
 
   // TemperatureSensor setup and read
   TemperatureSensor ts;
-  int8_t status;
-  uint8_t len;
-  uint8_t* data = (uint8_t*)malloc(4 * sizeof(uint8_t));
   status = ts.setup();
   len = ts.read(data);
   Serial.printf("Temperature value: %f\n", bytes_to_float(data));
-  memcpy(nvs.data.temp_buf,data, sizeof(data));
-  free(data);
+  memcpy(nvs.data.temp_buf, &data, len);
+  memset(&data, 0, sizeof(data));
 
 
   // SonicRangeSensor setup and read
   // TODO: utils.h function for long->byte[]; then use here.
   SonicRangeSensor srs;
-  data = (uint8_t*)malloc(1 * sizeof(long));
   status = srs.setup();
   len = srs.read(data);
   Serial.printf("Sonic Range value: %u\n", *data); // number issues
-  free(data);
+  memcpy(nvs.data.temp_buf, &data, len);
+  memset(&data, 0, sizeof(data));
 
   nvs.write_data();
   nvs.zero_data();

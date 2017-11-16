@@ -3,6 +3,7 @@
 int8_t RTC_container::check_datetime(){
   int8_t status;
   Serial.println("Checking RTC time...");
+  //TODO this needs to rtc.begin() first
   if (this->rtc.lostPower()) {
     Serial.println("RTC lost power; resetting to compile time.");
     this->rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
