@@ -15,7 +15,7 @@ public:
 
   /**
   * \brief Setup for use.
-  * \return status (0 -> success, -1 -> failure)
+  * \return status (0 -> success, other -> failure)
   *
   * If there is no counter in the NVS, make it now. Make namespace. Zero data.
   * Do anything we need to ensure we're ready for reading/writing.
@@ -89,6 +89,16 @@ public:
     uint8_t snow_buf [64];
     uint8_t pyro_buf [64];
   } data;
+
+  /**
+  * \brief SD cards should be able to manipulate this class.
+  * \relates SD_container
+  *
+  * SD cards will be able to load this class's `data` field as they need by
+  * requesting particular indices from storage; it will then format the data and
+  * write it to the card.
+  */
+  friend class SD_container;
 
 private:
 
