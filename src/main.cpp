@@ -53,7 +53,6 @@ void setup () {
   // TemperatureSensor setup and read
   TemperatureSensor ts;
   status = ts.setup();
-  delay(100);
   len = ts.read(data);
   Serial.printf("Temperature value: %f\n", bytes_to_float(data));
   memcpy(nvs.data.temp_buf, &data, len);
