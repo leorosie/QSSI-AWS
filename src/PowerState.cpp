@@ -73,6 +73,9 @@ uint8_t PowerState::enter_sleep(){
   esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
   esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
   esp_deep_sleep_enable_ext0_wakeup(WAKE_PIN, 0);
+  // NOTE: we need pullup resistors on these GPIO pins; else auto-wake!
+  //esp_deep_sleep_enable_ext0_wakeup(FLUSH_NVS_SWITCH, 0);
+  //esp_deep_sleep_enable_ext0_wakeup(WIFI_STATION_SWITCH, 0);
   Serial.println("Entering deep sleep...");
   esp_deep_sleep_start();
   return(status);
