@@ -46,16 +46,6 @@ void setup () {
   clock.setup();
 
   // TemperatureSensor setup and read
-
-
-  //enter_sleep();
-}
-
-void loop () {
-
-
-
-
   TemperatureSensor ts;
   int8_t status;
   uint8_t len;
@@ -76,10 +66,13 @@ void loop () {
   data = (uint8_t*)malloc(8 * sizeof(uint8_t));
   status = ps.setup();
   len = ps.read(data);
-  Serial.printf("Pyranometer value: %u\n", bytes_to_long(data));
+  status = ps.end();
+  Serial.printf("Pyranometer value: %u\n", bytes_to_float(data));
   free(data);
 
-  delay(5000);
+  enter_sleep();
+}
 
+void loop () {
 
 }
