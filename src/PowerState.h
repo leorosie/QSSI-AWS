@@ -7,6 +7,8 @@
 #include "utils.h"
 
 extern const gpio_num_t WAKE_PIN;
+extern const gpio_num_t FLUSH_NVS_SWITCH;
+extern const gpio_num_t WIFI_STATION_SWITCH;
 
 extern const int SONIC_RANGER_BUS;
 extern const int ONE_WIRE_BUS;
@@ -19,9 +21,7 @@ extern const int SD_CARD_2_POWER_BUS;
 extern const int SD_CARD_1_SS;
 extern const int SD_CARD_2_SS;
 
-extern const int FLUSH_NVS_SWITCH;
 extern const int FLUSH_NVS_LED;
-extern const int WIFI_STATION_SWITCH;
 
 class PowerState {
 public:
@@ -76,6 +76,12 @@ public:
   *   This method may undergo changes depending on microcontroller architecture
   *   and board functionality; for example, ESP32 Thing requires both slow and
   *   fast memory to be disabled to achieve optimal performance.
+  *
+  *   Currently, we allow 3 things to wake the board: the RTC alarm on pin 39,
+  *   button press on pin 32, and button press on pin 25. These are each
+  *   handled differently on wakeup (because each wakeup implies different
+  *   desired behavior).
+  *
   *
   */
   uint8_t enter_sleep();

@@ -11,6 +11,7 @@ uint8_t SonicRangeSensor::read(uint8_t* address){
   uint8_t len = 1;
   long pulse_value, mm, inches;
   pulse_value = pulseIn(SONIC_RANGER_BUS, HIGH);
+  //Serial.printf("Current sonic ranger output: %ld\n",pulse_value);
   mm = pulse_value;
   inches = mm / 25.4;
   *address = mm;

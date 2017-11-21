@@ -58,13 +58,12 @@ void setup () {
   memcpy(nvs.data.temp_buf, &data, len);
   memset(&data, 0, sizeof(data));
 
-
   // SonicRangeSensor setup and read
   // TODO: utils.h function for long->byte[]; then use here.
   SonicRangeSensor srs;
   status = srs.setup();
   len = srs.read(data);
-  Serial.printf("Sonic Range value: %u\n", *data); // number issues
+  Serial.printf("Sonic Range value: %ld\n", *data); // number issues
   memcpy(nvs.data.temp_buf, &data, len);
   memset(&data, 0, sizeof(data));
 
