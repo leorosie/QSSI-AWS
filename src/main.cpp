@@ -1,6 +1,6 @@
 #include "main.h"
 
-/*void handle_wakeup(RTC_container clock){
+void handle_wakeup(RTC_container clock){
   esp_deep_sleep_wakeup_cause_t reason;
   reason = esp_deep_sleep_get_wakeup_cause();
   switch(reason){
@@ -35,7 +35,7 @@ void enter_sleep(){
   Serial.println("Entering deep sleep...");
   esp_deep_sleep_start();
   Serial.println("If printed, system is not asleep.");
-} */
+}
 
 void setup () {
   Serial.begin(115200);
