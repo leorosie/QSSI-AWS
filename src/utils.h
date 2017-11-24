@@ -57,10 +57,10 @@ inline float bytes_to_float(uint8_t* address){
 inline uint8_t long_to_bytes(uint8_t* address, long long_val){
   union {
     long long_bytes;
-    uint8_t long_array[8];
+    uint8_t long_array[LONG_SIZE];
   } u;
   u.long_bytes = long_val;
-  memcpy(address, u.long_array, 8);
+  memcpy(address, u.long_array, LONG_SIZE);
   return(sizeof(u.long_array));
 }
 
@@ -75,10 +75,10 @@ inline uint8_t long_to_bytes(uint8_t* address, long long_val){
 inline long bytes_to_long(uint8_t* address){
   union {
     long long_bytes;
-    uint8_t long_array[8];
+    uint8_t long_array[LONG_SIZE];
   } u;
   long l;
-  memcpy(u.long_array, address, 8);
+  memcpy(u.long_array, address, LONG_SIZE);
   l = u.long_bytes;
   return(l);
 }

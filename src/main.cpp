@@ -86,12 +86,11 @@ void setup () {
   nvs.close();
 
   PyranometerSensor ps;
-  data = (uint8_t*)malloc(8 * sizeof(uint8_t));
   status = ps.setup();
   len = ps.read(data);
-  status = ps.end();
   Serial.printf("Pyranometer value: %u\n", bytes_to_float(data));
-  free(data);
+  memcpy(nvs.data.temp_buf, &data, len);
+  memset(&ddata, 0, sizeof(data));
 
   enter_sleep();
 }
