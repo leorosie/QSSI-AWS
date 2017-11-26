@@ -18,10 +18,16 @@
 *   \brief Pin used in communication with one-wire temperature sensor.
 */
 
-/*
-* TODO: add pins for SD card, pyranometer, camera
+/** \var PYRANOMETER_CS_PIN
+*   \brief Pin used in communication with external adc and pyranometer.
 */
+
 
 const gpio_num_t WAKE_PIN = GPIO_NUM_39;
 const int SONIC_RANGER_BUS = 12;
 const int ONE_WIRE_BUS = 14;
+const int PYRANOMETER_CS_PIN = 13;
+
+const int SCK_PIN = 18;
+const int MISO_PIN = 19;
+const int MOSI_PIN = 23;

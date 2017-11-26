@@ -44,3 +44,41 @@ inline float bytes_to_float(uint8_t* address){
   f = u.float_bytes;
   return(f);
 }
+
+/**
+*  \brief Convert a long to an array of bytes.
+*
+*  \param address the memory location where the long will be written as bytes
+*  \param long_val the number which will be written to bytes
+*  \return i the length of the byte string (should always be 8)
+*
+*/
+
+inline uint8_t long_to_bytes(uint8_t* address, long long_val){
+  union {
+    long long_bytes;
+    uint8_t long_array[LONG_SIZE];
+  } u;
+  u.long_bytes = long_val;
+  memcpy(address, u.long_array, LONG_SIZE);
+  return(sizeof(u.long_array));
+}
+
+/**
+*  \brief Convert an array of bytes to a long.
+*
+*  \param address the memory location of the long (_always_ 8)
+*  \return l the long
+*
+*/
+
+inline long bytes_to_long(uint8_t* address){
+  union {
+    long long_bytes;
+    uint8_t long_array[LONG_SIZE];
+  } u;
+  long l;
+  memcpy(u.long_array, address, LONG_SIZE);
+  l = u.long_bytes;
+  return(l);
+}

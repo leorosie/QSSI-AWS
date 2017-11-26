@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "TemperatureSensor.h"
 #include "SonicRangeSensor.h"
+#include "PyranometerSensor.h"
 #include "RTC_container.h"
 #include "NVS_container.h"
 
