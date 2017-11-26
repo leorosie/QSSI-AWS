@@ -73,6 +73,13 @@ void setup () {
   memcpy(nvs.data.temp_buf, &data, len);
   memset(&data, 0, sizeof(data));
 
+  PyranometerSensor ps;
+  status = ps.setup();
+  len = ps.read(data);
+  Serial.printf("Pyranometer value: %u\n", bytes_to_float(data));
+  memcpy(nvs.data.temp_buf, &data, len);
+  memset(&data, 0, sizeof(data));
+
   nvs.write_data();
   nvs.zero_data();
   nvs.read_data(1);
@@ -84,13 +91,6 @@ void setup () {
     nvs.clear();
   }
   nvs.close();
-
-  PyranometerSensor ps;
-  status = ps.setup();
-  len = ps.read(data);
-  Serial.printf("Pyranometer value: %u\n", bytes_to_float(data));
-  memcpy(nvs.data.temp_buf, &data, len);
-  memset(&ddata, 0, sizeof(data));
 
   enter_sleep();
 }
