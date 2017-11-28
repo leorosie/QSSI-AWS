@@ -3,6 +3,7 @@
 #include "FS.h"
 #include "SD.h"
 #include "SPI.h"
+#include "pins.h"
 
 #include "NVS_container.h"
 

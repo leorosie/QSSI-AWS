@@ -8,6 +8,7 @@
 #include "PyranometerSensor.h"
 #include "RTC_container.h"
 #include "NVS_container.h"
+#include "SD_container.h"
 
 /** Handle any wakeup event (including power on).
 *   \param clock an RTC_container object, which contains methods that are

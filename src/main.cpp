@@ -50,6 +50,7 @@ void setup () {
   long clock_data =clock.rtc.now().secondstime();
   memcpy(nvs.data.time_buf, &clock_data, sizeof(clock_data));
 
+
   // TemperatureSensor setup and read
   TemperatureSensor ts;
   status = ts.setup();
@@ -77,12 +78,17 @@ void setup () {
   nvs.zero_data();
   nvs.read_data(1);
   Serial.printf("First recorded value: %f\n", bytes_to_float(nvs.data.temp_buf));
-  if(nvs.get_counter() >= MAX_NVS_COUNTER){
+  //if(nvs.get_counter() >= MAX_NVS_COUNTER){
+    //SD_container setup
+    SD_container sd;
+    sd.setup("/test.txt", sizeof("/test.txt"), 4);
+    sd.make_line(nvs,1);
+    sd.close();
     // TODO open up SD cards and move data over.
     // NOTE we will still use clear() at the end.
     Serial.printf("NVS data cleared.\n");
     nvs.clear();
-  }
+//  }
   nvs.close();
 
   state.enter_sleep();
