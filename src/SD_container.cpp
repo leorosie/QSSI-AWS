@@ -75,15 +75,16 @@ int8_t SD_container::setup(const char* path, int path_len, int card_pin){
     int8_t status = 0;
     char buffer[512];
     nvs.read_data(index);
-    long time = 0; //TODO switch to below ASAP
-    //long time = bytes_to_long(nvs.data.time_buf);
+    long time = bytes_to_long(nvs.data.time_buf);
     float temp = bytes_to_float(nvs.data.temp_buf);
-    long snow = 0; //TODO switch to below ASAP
-    //long snow = bytes_to_long(nvs.data.snow_buf);
+    long snow = bytes_to_long(nvs.data.snow_buf);
     float pyro = bytes_to_float(nvs.data.pyro_buf);
     snprintf(buffer, sizeof(buffer), "%ld,%f,%ld,%f", time, temp, snow, pyro);
+    
     String line = buffer;
+    String newline = " \n";
     this->append_to_file(line);
+    this->append_to_file(newline);
     nvs.zero_data();
     return(status);
   }

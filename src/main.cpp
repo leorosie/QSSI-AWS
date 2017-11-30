@@ -81,9 +81,14 @@ void setup () {
   //if(nvs.get_counter() >= MAX_NVS_COUNTER){
     //SD_container setup
     SD_container sd;
-    sd.setup("/test.txt", sizeof("/test.txt"), 4);
-    sd.make_line(nvs,1);
+    state.enter_SD_card_write_state(1);
+    state.enter_SD_card_write_state(2);
+    sd.setup("/test.txt", sizeof("/test.txt"), 17);
+
+    sd.make_line(nvs,2);
     sd.close();
+
+  
     // TODO open up SD cards and move data over.
     // NOTE we will still use clear() at the end.
     Serial.printf("NVS data cleared.\n");
