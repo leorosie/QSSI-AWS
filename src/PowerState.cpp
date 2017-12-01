@@ -33,6 +33,7 @@ uint8_t PowerState::enter_basic_state(){
   digitalWrite(SD_CARD_2_POWER_BUS, LOW);
   digitalWrite(SD_CARD_1_SS, LOW);
   digitalWrite(SD_CARD_2_SS, LOW);
+  digitalWrite(PYRANOMETER_CS_PIN, HIGH);
   digitalWrite(FLUSH_NVS_LED, LOW);
   delay(100);
   return(status);
@@ -49,11 +50,13 @@ uint8_t PowerState::enter_SD_card_write_state(uint8_t number){
   uint8_t status = 0;
   this->enter_basic_state();
   if(number == 1){
+    Serial.println("entering SD 1 state");
     digitalWrite(SD_CARD_1_POWER_BUS, HIGH);
-    digitalWrite(SD_CARD_1_SS, HIGH);
+    digitalWrite(SD_CARD_1_SS, LOW);
   } else if (number == 2){
+    Serial.println("entering SD 2 state");
     digitalWrite(SD_CARD_2_POWER_BUS, HIGH);
-    digitalWrite(SD_CARD_2_SS, HIGH);
+    digitalWrite(SD_CARD_2_SS, LOW);
   } else {
     status = -1;
   }

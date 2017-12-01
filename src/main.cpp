@@ -81,9 +81,10 @@ void setup () {
   //if(nvs.get_counter() >= MAX_NVS_COUNTER){
     //SD_container setup
     SD_container sd;
+    //state.enter_SD_card_write_state(1);
     state.enter_SD_card_write_state(1);
-    //state.enter_SD_card_write_state(2);
-    sd.setup("/test.txt", sizeof("/test.txt"), 4);
+    delay(500);
+    sd.setup("/test.txt", sizeof("/test.txt"), 17);
 
     sd.make_line(nvs,2);
     sd.close();
