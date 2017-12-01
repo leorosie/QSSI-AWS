@@ -10,6 +10,9 @@
 #include "NVS_container.h"
 #include "SD_container.h"
 
+extern const int SD_CARD_1_SS
+extern const int SD_CARD_2_SS
+
 /** Handle any wakeup event (including power on).
 *   \param clock an RTC_container object, which contains methods that are
 *          useful for timed events.

@@ -15,10 +15,12 @@ int8_t SD_container::setup(const char* path, int path_len, int card_pin){
     return(-2);
   }
   this->file = this->filesystem->open(this->path); //make sure it can read
+
   if (!this->file) { //if there's no file...
     this->make_file(); //make it
     this->file = this->filesystem->open(this->path); //make sure it worked
     if (!this->file) {
+
       return(-3); //it didn't. something is really messed up.
     }
   }
@@ -51,7 +53,9 @@ int8_t SD_container::setup(const char* path, int path_len, int card_pin){
     if (!file){
       return(-1);
     }
+
     String csv_header = "timestamp(s),temperature(C),sonic_range(mm),shortwave(Wm^-2)\n";
+
     if( !(this->file.print(csv_header)) ) {
       return(-2);
     }

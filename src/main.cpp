@@ -82,9 +82,9 @@ void setup () {
     //SD_container setup
     SD_container sd;
     //state.enter_SD_card_write_state(1);
-    state.enter_SD_card_write_state(1);
+    state.enter_SD_card_write_state(2);
     delay(500);
-    sd.setup("/test.txt", sizeof("/test.txt"), 17);
+    sd.setup("/test.txt", sizeof("/test.txt"), SD_CARD_2_SS);
 
     sd.make_line(nvs,2);
     sd.close();
