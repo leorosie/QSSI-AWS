@@ -1,11 +1,14 @@
-#include "utils.h"
+#pragma once
+//#include "mbedtls/esp_debug.h"
 #include <WiFi.h>
+#include "NVS_container.h"
+#include "utils.h"
 
 /**
 * \var WEB_SERVER_TIME
 * \brief Roughly the amount of time the server will be awake.
 */
-const int8_t WEB_SERVER_TIME = 60;
+const int32_t WEB_SERVER_TIME = 60;
 
 class Wifi_container {
 public:
@@ -47,6 +50,19 @@ public:
   */
   int8_t close();
 
+  /**
+  * \var data
+  * \brief A copy of the NVS data we want to share.
+  * TODO: this bothers me since it's basically the same struct we use in NVS.
+  *       it would be nice if we could DRY this up somehow.
+  */
+  struct Data {
+    uint8_t time_buf [64];
+    uint8_t temp_buf [64];
+    uint8_t snow_buf [64];
+    uint8_t pyro_buf [64];
+  } data;
+
 private:
 
   /**
@@ -78,20 +94,34 @@ private:
   int8_t make_html_doc();
 
   /**
+  * \brief Put some test data in to make an html page.
+  * \return status (0 -> ok, !0 -> error)
+  *
+  * This is purely for testing purposes to make it easier on developers:
+  * pack some values into this object's data struct so we can check the web
+  * server's functionality.
+  */
+  int8_t pack_dummy_data();
+
+  /**
   * \var ssid
   * \brief SSID for our wifi access point.
   */
-  char ssid[16];
+  const String ssid = "QSSI-AWS";
 
   /**
   * \var password
   * \brief Password for our wifi access point.
+  *
+  * NOTE: a password must be a minimum of 8 characters or the AP will not work!!
   */
-  char password[16];
+  const String password = "12345678";
 
   /**
   * \var ip
   * \brief IP address used by this access point.
+  *
+  * NOTE default IP is 192.168.4.1
   */
   IPAddress ip;
 
@@ -108,21 +138,9 @@ private:
   String html_page;
 
   /**
-  * \var data
-  * \brief A copy of the NVS data we want to share.
-  * TODO: this bothers me. can it be done better?
-  */
-  struct Data {
-    uint8_t time_buf [64];
-    uint8_t temp_buf [64];
-    uint8_t snow_buf [64];
-    uint8_t pyro_buf [64];
-  } data;
-
-  /**
   * \var timecount
   * \brief Time that the web server should stay up.
   */
-  int8_t timecount = WEB_SERVER_TIME;
+  int32_t timecount = WEB_SERVER_TIME;
 
 };
