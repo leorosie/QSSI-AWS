@@ -9,12 +9,18 @@ uint8_t NVS_container::setup(){
     Serial.println("no existing counter; making it now");
     this->accessor.putShort("counter", 0);
   }
+  sub_status = this->read_fails();
+  if(sub_status != 0){
+    Serial.println("no existing fails; making it now");
+    this->accessor.putShort("fails", 0);
+  }
   return(status);
 }
 
 uint8_t NVS_container::close(){
   uint8_t status;
   this->write_counter();
+  this->write_fails();
   this->accessor.end();
   return(status);
 }
@@ -83,6 +89,31 @@ uint16_t NVS_container::get_counter(){
   return(this->counter);
 }
 
+uint16_t NVS_container::get_fails(){
+  return(this->fails);
+}
+
+uint8_t NVS_container::set_fails(uint16_t fails){
+  this->fails = fails;
+  return(0);
+}
+
+uint8_t NVS_container::read_fails(){
+  uint8_t status = 0;
+  this->fails = this->accessor.getShort("fails",0); //0 -> not found
+  //if(this->fails == 0){
+  //  status = -1;
+  //}
+  return(status);
+}
+
+uint8_t NVS_container::write_fails(){
+  uint8_t status;
+  Serial.printf("Writing out fails as %hd\n",this->fails);
+  this->accessor.putShort("fails",this->fails);
+  return(status);
+}
+
 uint8_t NVS_container::read_counter(){
   uint8_t status = 0;
   this->counter = this->accessor.getShort("counter",0); //0 -> not found
@@ -105,8 +136,11 @@ uint8_t NVS_container::clear(){
   is_cleared = this->accessor.clear();
   status = is_cleared ? 0 : -1;
   if(status == 0){
+    Serial.printf("NVS was cleared.\n");
     this->counter = 0;
     this->write_counter();
+  } else {
+    Serial.printf("NVS was not cleared.\n");
   }
   return(status);
 }

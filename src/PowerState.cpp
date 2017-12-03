@@ -22,9 +22,9 @@ PowerState::PowerState(){
   this->enter_basic_state();
 }
 
-PowerState::~PowerState(){
-  delete this;
-}
+//PowerState::~PowerState(){
+  //delete this;
+//}
 
 uint8_t PowerState::enter_basic_state(){
   uint8_t status = 0;

@@ -28,7 +28,7 @@ public:
 
   PowerState();
 
-  ~PowerState();
+  //~PowerState();
 
   //NOTE no copy constructor; we will never have 2 states.
 

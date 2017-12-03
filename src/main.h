@@ -10,8 +10,8 @@
 #include "NVS_container.h"
 #include "SD_container.h"
 
-extern const int SD_CARD_1_SS
-extern const int SD_CARD_2_SS
+extern const int SD_CARD_1_SS;
+extern const int SD_CARD_2_SS;
 
 /** Handle any wakeup event (including power on).
 *   \param clock an RTC_container object, which contains methods that are
@@ -36,3 +36,8 @@ void setup ();
 *   to sleep all without ever touching this loop.
 */
 void loop ();
+
+void do_restart_operations(RTC_container clock);
+void do_wake_operations(RTC_container clock);
+int write_out(NVS_container* nvs);
+int read_sensors(RTC_container clock);

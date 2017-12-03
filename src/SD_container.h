@@ -75,7 +75,7 @@ public:
   * append it to the file. It should be iteratively called on the NVS_container
   * from 0 to MAX_NVS_COUNTER.
   */
-  int8_t make_line(NVS_container nvs, int index);
+  int8_t make_line(NVS_container* nvs, int index);
 
 private:
 
