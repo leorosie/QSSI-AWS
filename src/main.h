@@ -39,5 +39,5 @@ void loop ();
 
 void do_restart_operations(RTC_container clock);
 void do_wake_operations(RTC_container clock);
-int write_out(NVS_container* nvs);
+int write_out(NVS_container* nvs, int card_num);
 int read_sensors(RTC_container clock);

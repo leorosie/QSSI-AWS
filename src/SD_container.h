@@ -86,7 +86,7 @@ private:
   * We don't plan on separating things: we want one big csv with all of our
   * data. This ensures we have it all together.
   */
-  FS* filesystem;
+  SDFS* filesystem;
 
   /**
   * \var int card_pin

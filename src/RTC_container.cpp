@@ -18,7 +18,7 @@ int8_t RTC_container::check_datetime(){
 int8_t RTC_container::setup(){
   Wire.begin();
   int8_t status = 0;
-  this->sleep_time = 900; // TODO set for field interval (15m) before deploying.
+  this->sleep_time = 10; // TODO set for field interval (15m) before deploying.
   if (! rtc.begin()) {
     Serial.println("Couldn't find RTC");
     status = -1;

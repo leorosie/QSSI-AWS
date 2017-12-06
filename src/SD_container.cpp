@@ -42,7 +42,7 @@ int8_t SD_container::setup(const char* path, int path_len, int card_pin){
   int8_t SD_container::close(){
     int8_t status = 0;
     this->file.close();
-    //delete(this->filesystem);
+    //this->filesystem->end();
     return(status);
   }
 
@@ -96,6 +96,7 @@ int8_t SD_container::setup(const char* path, int path_len, int card_pin){
     long snow = bytes_to_long(nvs->data.snow_buf);
     float pyro = bytes_to_float(nvs->data.pyro_buf);
     snprintf(buffer, sizeof(buffer), "%ld,%f,%ld,%f", time, temp, snow, pyro);
+    Serial.println(buffer);
 
     String line = buffer;
     String newline = " \n";
