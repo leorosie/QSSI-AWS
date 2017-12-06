@@ -15,9 +15,9 @@ PowerState::PowerState(){
   pinMode(SD_CARD_1_SS, OUTPUT);
   pinMode(SD_CARD_2_SS, OUTPUT);
   //misc
-  pinMode(FLUSH_NVS_SWITCH, INPUT);
+  pinMode(FLUSH_NVS_SWITCH, INPUT_PULLDOWN);
   pinMode(FLUSH_NVS_LED, OUTPUT);
-  pinMode(WIFI_STATION_SWITCH, INPUT);
+  pinMode(WIFI_STATION_SWITCH, INPUT_PULLDOWN);
   //turn on/off anything for basic operation
   this->enter_basic_state();
 }
@@ -82,7 +82,13 @@ uint8_t PowerState::enter_sleep(){
   esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
   esp_deep_sleep_enable_ext0_wakeup(WAKE_PIN, 0);
   // NOTE: we need pullup resistors on these GPIO pins; else auto-wake!
-  //esp_deep_sleep_enable_ext0_wakeup(FLUSH_NVS_SWITCH, 0);
+  uint64_t mask = 0;
+  uint64_t val = 1;
+  mask |= val << FLUSH_NVS_SWITCH;
+  Serial.println(WIFI_STATION_SWITCH);
+  Serial.println(sizeof(mask));
+  mask |= val << WIFI_STATION_SWITCH;
+  esp_deep_sleep_enable_ext1_wakeup(mask,ESP_EXT1_WAKEUP_ANY_HIGH);
   //esp_deep_sleep_enable_ext0_wakeup(WIFI_STATION_SWITCH, 0);
   Serial.println("Entering deep sleep...");
   esp_deep_sleep_start();

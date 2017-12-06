@@ -64,8 +64,10 @@
 
 
 const gpio_num_t WAKE_PIN = GPIO_NUM_39;
-const gpio_num_t FLUSH_NVS_SWITCH = GPIO_NUM_25;
-const gpio_num_t WIFI_STATION_SWITCH = GPIO_NUM_32;
+//const gpio_num_t FLUSH_NVS_SWITCH = GPIO_NUM_25;
+//const gpio_num_t WIFI_STATION_SWITCH = GPIO_NUM_32;
+const int FLUSH_NVS_SWITCH = 25;
+const int WIFI_STATION_SWITCH = 32;
 const int SONIC_RANGER_BUS = 12;
 const int ONE_WIRE_BUS = 14;
 const int PYRANOMETER_CS_PIN = 13;

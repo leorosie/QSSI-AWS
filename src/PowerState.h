@@ -7,8 +7,10 @@
 #include "utils.h"
 
 extern const gpio_num_t WAKE_PIN;
-extern const gpio_num_t FLUSH_NVS_SWITCH;
-extern const gpio_num_t WIFI_STATION_SWITCH;
+extern const int FLUSH_NVS_SWITCH;
+extern const int WIFI_STATION_SWITCH;
+//extern const gpio_num_t FLUSH_NVS_SWITCH;
+//extern const gpio_num_t WIFI_STATION_SWITCH;
 
 extern const int SONIC_RANGER_BUS;
 extern const int ONE_WIRE_BUS;
