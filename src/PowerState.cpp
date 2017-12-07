@@ -15,24 +15,24 @@ PowerState::PowerState(){
   pinMode(SD_CARD_1_SS, OUTPUT);
   pinMode(SD_CARD_2_SS, OUTPUT);
   //misc
-  pinMode(FLUSH_NVS_SWITCH, INPUT);
+  pinMode(FLUSH_NVS_SWITCH, INPUT_PULLDOWN);
   pinMode(FLUSH_NVS_LED, OUTPUT);
-  pinMode(WIFI_STATION_SWITCH, INPUT);
+  pinMode(WIFI_STATION_SWITCH, INPUT_PULLDOWN);
   //turn on/off anything for basic operation
   this->enter_basic_state();
 }
 
-PowerState::~PowerState(){
-  delete this;
-}
+//PowerState::~PowerState(){
+  //delete this;
+//}
 
 uint8_t PowerState::enter_basic_state(){
   uint8_t status = 0;
   digitalWrite(SENSOR_POWER_BUS, LOW);
   digitalWrite(SD_CARD_1_POWER_BUS, LOW);
   digitalWrite(SD_CARD_2_POWER_BUS, LOW);
-  digitalWrite(SD_CARD_1_SS, LOW);
-  digitalWrite(SD_CARD_2_SS, LOW);
+  digitalWrite(SD_CARD_1_SS, HIGH);
+  digitalWrite(SD_CARD_2_SS, HIGH);
   digitalWrite(PYRANOMETER_CS_PIN, HIGH);
   digitalWrite(FLUSH_NVS_LED, LOW);
   delay(100);
@@ -43,6 +43,7 @@ uint8_t PowerState::enter_sensor_state(){
   uint8_t status = 0;
   this->enter_basic_state();
   digitalWrite(SENSOR_POWER_BUS, HIGH);
+  digitalWrite(PYRANOMETER_CS_PIN, LOW);
   return(status);
 }
 
@@ -52,11 +53,15 @@ uint8_t PowerState::enter_SD_card_write_state(uint8_t number){
   if(number == 1){
     Serial.println("entering SD 1 state");
     digitalWrite(SD_CARD_1_POWER_BUS, HIGH);
-    digitalWrite(SD_CARD_1_SS, LOW);
+    digitalWrite(SD_CARD_2_POWER_BUS, LOW);
+    digitalWrite(SD_CARD_1_SS, LOW); // on
+    digitalWrite(SD_CARD_2_SS, LOW);
   } else if (number == 2){
     Serial.println("entering SD 2 state");
     digitalWrite(SD_CARD_2_POWER_BUS, HIGH);
-    digitalWrite(SD_CARD_2_SS, LOW);
+    digitalWrite(SD_CARD_1_POWER_BUS, LOW);
+    digitalWrite(SD_CARD_2_SS, LOW); // on
+    digitalWrite(SD_CARD_1_SS, LOW);
   } else {
     status = -1;
   }
@@ -77,7 +82,11 @@ uint8_t PowerState::enter_sleep(){
   esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
   esp_deep_sleep_enable_ext0_wakeup(WAKE_PIN, 0);
   // NOTE: we need pullup resistors on these GPIO pins; else auto-wake!
-  //esp_deep_sleep_enable_ext0_wakeup(FLUSH_NVS_SWITCH, 0);
+  uint64_t mask = 0;
+  uint64_t val = 1;
+  mask |= val << FLUSH_NVS_SWITCH;
+  mask |= val << WIFI_STATION_SWITCH;
+  esp_deep_sleep_enable_ext1_wakeup(mask,ESP_EXT1_WAKEUP_ANY_HIGH);
   //esp_deep_sleep_enable_ext0_wakeup(WIFI_STATION_SWITCH, 0);
   Serial.println("Entering deep sleep...");
   esp_deep_sleep_start();

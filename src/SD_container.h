@@ -75,7 +75,7 @@ public:
   * append it to the file. It should be iteratively called on the NVS_container
   * from 0 to MAX_NVS_COUNTER.
   */
-  int8_t make_line(NVS_container nvs, int index);
+  int8_t make_line(NVS_container* nvs, int index);
 
 private:
 
@@ -86,7 +86,7 @@ private:
   * We don't plan on separating things: we want one big csv with all of our
   * data. This ensures we have it all together.
   */
-  FS* filesystem;
+  SDFS* filesystem;
 
   /**
   * \var int card_pin

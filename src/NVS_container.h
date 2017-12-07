@@ -8,7 +8,7 @@ extern const uint8_t LONG_SIZE;
 /** \var MAX_NVS_COUNTER
 *   \brief Max number of entries in NVS before we move data to SD card.
 */
-const uint8_t MAX_NVS_COUNTER = 48;
+const uint8_t MAX_NVS_COUNTER = 24;
 
 class NVS_container {
 public:
@@ -77,6 +77,22 @@ public:
   uint16_t get_counter();
 
   /**
+  * \brief Get the fail state for SD card writes.
+  *
+  * SD cards don't work very well with esp32. This is part of a hack to retry
+  * bad writes.
+  */
+  uint16_t get_fails();
+
+  /**
+  * \brief get the fail state for SD card writes.
+  *
+  * SD cards don't work very well with esp32. This is part of a hack to retry
+  * bad writes.
+  */
+  uint8_t set_fails(uint16_t fails);
+
+  /**
   * \var data
   * \brief All fields of a single timepoint observation.
   *
@@ -112,6 +128,24 @@ private:
   uint8_t read_counter();
 
   /**
+  * \brief Get the fails from NVS.
+  * \return status (0 -> success, -1 -> failure)
+  *
+  * Internal method to fetch the fails field on launch. This is used to try
+  * re-writing after the SD card fails.
+  */
+  uint8_t read_fails();
+
+  /**
+  * \brief Set the fails in NVS.
+  * \return status (0 -> success, -1 -> failure)
+  *
+  * Internal method to update the Sd fails before sleep because we can't fix it
+  * while the system is awake...
+  */
+  uint8_t write_fails();
+
+  /**
   * \brief Set the counter in NVS.
   * \return status (0 -> success, -1 -> failure)
   *
@@ -140,5 +174,13 @@ private:
   * Used to name keys, keep track of writes, etc.
   */
   int16_t counter;
+
+  /**
+  * \brief Fail state for SD card writes.
+  *
+  * SD cards don't work very well with esp32. This is part of a hack to retry
+  * bad writes.
+  */
+  uint16_t fails;
 
 };
