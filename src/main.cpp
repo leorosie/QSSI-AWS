@@ -1,82 +1,76 @@
 #include "main.h"
 
-void handle_wakeup(RTC_container clock){
-  PowerState state;
+void handle_wakeup(PowerState* state, RTC_container* clock, NVS_container* nvs){
   int status = 1;
   esp_deep_sleep_wakeup_cause_t reason;
   reason = esp_deep_sleep_get_wakeup_cause();
   switch(reason){
     case 1  :
       Serial.println("Wakeup caused by external signal using RTC_IO (Interrupt from RTC)");
-      do_wake_operations(clock);
+      Wire.begin();
+      clock->setup();
+      do_wake_operations(state, clock, nvs);
       break;
     case 2  :
       Serial.println("Wakeup caused by external signal using RTC_CNTL");
-      break;
-    case 3  :
-      Serial.println("Wakeup caused by timer");
-      break;
-    case 4  :
-      Serial.println("Wakeup caused by touchpad");
-      break;
-    case 5  :
-      Serial.println("Wakeup caused by ULP program");
+      Wire.begin();
+      clock->setup();
+      do_button_operations(state, clock, nvs);
       break;
     default :
-      Serial.println("Wakeup was not caused by deep sleep");
-      int8_t clock_status;
-      clock_status = clock.check_datetime();
-      do_restart_operations(clock);
+      Serial.println("Wakeup was not caused by deep sleep (probably powering on)");
+      Wire.begin();
+      int8_t clock_status = clock->check_datetime();
+      clock->setup();
+      do_wake_operations(state, clock, nvs);
       break;
     }
 }
 
-void do_restart_operations(RTC_container clock){
-  PowerState state;
-  int status;
-  status = read_sensors(clock);
-  status = -1;
-  state.enter_sleep();
+void do_wake_operations(PowerState* state, RTC_container* clock, NVS_container* nvs){
+  int status = read_sensors(state, clock, nvs);
+  state->enter_sleep();
 }
 
-void do_wake_operations(RTC_container clock){
-  PowerState state;
-  int status;
-  status = read_sensors(clock);
-  status = -1;
-  Serial.println("now going to sleep...");
-  state.enter_sleep();
+void do_button_operations(PowerState* state, RTC_container* clock, NVS_container* nvs ){
+  if(digitalRead(WIFI_STATION_SWITCH) == HIGH){
+    //start wifi (NOTE not in this branch yet)
+    while(digitalRead(WIFI_STATION_SWITCH) == HIGH); //let go of the button
+  } else if (digitalRead(FLUSH_NVS_SWITCH) == HIGH) {
+    write_out(state, nvs, 1);
+    nvs->close();
+    while(digitalRead(FLUSH_NVS_SWITCH) == HIGH); //LET GO OF THE GD BUTTON
+  } else {
+    Serial.println("Button wasn't held long enough to determine command.");
+  }
+  state->enter_sleep();
 }
 
 void setup () {
   Serial.begin(115200);
   delay(100); // wait for console opening
+  PowerState state;
   RTC_container clock;
-  handle_wakeup(clock); //do whatever it is we do when we wake up
+  NVS_container nvs;
+  uint8_t nvs_status = nvs.setup();
+  handle_wakeup(&state, &clock, &nvs); //do whatever it is we do when we wake up
 }
 
-int write_out(NVS_container* nvs, int card_num){
-  PowerState state;
-  state.enter_basic_state();
+int write_out(PowerState* state, NVS_container* nvs, int card_num){
   nvs->zero_data();
   int8_t sd_state = 0;
   SD_container sd;
   sd = SD_container();
   if(card_num == 1){
-    state.enter_SD_card_write_state(1);
+    state->enter_SD_card_write_state(1);
     delay(100);
-    Serial.printf("writing\n");
     sd_state = sd.setup("/test.txt", sizeof("/test.txt"), SD_CARD_1_SS);
-    Serial.printf("SD state on setup: %d\n", sd_state);
   } else if (card_num == 2) {
-    state.enter_SD_card_write_state(2);
+    state->enter_SD_card_write_state(2);
     delay(100);
-    Serial.printf("writing\n");
     sd_state = sd.setup("/test.txt", sizeof("/test.txt"), SD_CARD_2_SS);
-    Serial.printf("SD state on setup: %d\n", sd_state);
   }
   if(sd_state == -9){
-    Serial.printf("SD write returned error code: %d\n", sd_state);
     sd.close();
     if(card_num == 1 && nvs->get_fails() == 2){
       nvs->set_fails(3);
@@ -93,61 +87,51 @@ int write_out(NVS_container* nvs, int card_num){
   }
   int i;
   for(i = 0; i < nvs->get_counter(); ++i){
-    Serial.printf("writing to card %d: ", card_num);
     sd.make_line(nvs,i);
   }
   sd.close();
   if((nvs->get_fails() == 0) && (card_num == 2)){
     nvs->clear();
   }
+  state->enter_basic_state();
   return(0);
 }
 
-int read_sensors(RTC_container clock){
-  PowerState state;
-  Wire.begin();
-  //RTC_container clock;
-  clock.setup();
+int read_sensors(PowerState* state, RTC_container* clock, NVS_container* nvs){
   int8_t state_status;
-  state_status = state.enter_sensor_state();
+  state_status = state->enter_sensor_state();
 
   //define some variables for use in this function
   int8_t status;
   uint8_t len;
   uint8_t data[64];
 
-  //NVS_container setup
-  NVS_container nvs;
-  nvs.setup();
-
-  //keep track of whether we did this
-  uint8_t handled_fails = 0;
-  //SD card check (did we fail last time?)
-  uint16_t fails = nvs.get_fails();
+  //SD card check (did we fail last time we tried to write out?)
+  uint16_t fails = nvs->get_fails();
   uint8_t card1_status;
   uint8_t card2_status;
   if (fails > 0){
     Serial.printf("last SD write failed; trying again now!\n");
-    card1_status = write_out(&nvs,1);
-    card2_status = write_out(&nvs,2);
-    handled_fails = 1;
+    card1_status = write_out(state,nvs,1);
+    card2_status = write_out(state,nvs,2);
+    status = card1_status + card2_status;
     if (status == 0){
       Serial.printf("New write out was successful!\n");
-      nvs.set_fails(0);
+      nvs->set_fails(0);
     } else {
       Serial.printf("New write out failed. damn.\n");
     }
   }
 
-  long clock_data = clock.rtc.now().secondstime();
-  memcpy(nvs.data.time_buf, &clock_data, sizeof(clock_data));
+  long clock_data = clock->rtc.now().secondstime();
+  memcpy(nvs->data.time_buf, &clock_data, sizeof(clock_data));
 
   // TemperatureSensor setup and read
   TemperatureSensor ts;
   status = ts.setup();
   len = ts.read(data);
   Serial.printf("Temperature value: %f\n", bytes_to_float(data));
-  memcpy(nvs.data.temp_buf, &data, len);
+  memcpy(nvs->data.temp_buf, &data, len);
   memset(&data, 0, sizeof(data));
 
   // SonicRangeSensor setup and read
@@ -155,7 +139,7 @@ int read_sensors(RTC_container clock){
   status = srs.setup();
   len = srs.read(data);
   Serial.printf("Sonic Range value: %ld\n", bytes_to_long(data)); // number issues
-  memcpy(nvs.data.snow_buf, &data, len);
+  memcpy(nvs->data.snow_buf, &data, len);
   memset(&data, 0, sizeof(data));
 
   // PyranometerSensor setup and read
@@ -163,16 +147,15 @@ int read_sensors(RTC_container clock){
   status = ps.setup();
   len = ps.read(data);
   Serial.printf("Pyranometer value: %u\n", bytes_to_float(data));
-  memcpy(nvs.data.pyro_buf, &data, len);
+  memcpy(nvs->data.pyro_buf, &data, len);
   memset(&data, 0, sizeof(data));
 
-  nvs.write_data();
-  if(nvs.get_counter() >= MAX_NVS_COUNTER){
-    write_out(&nvs,1);
-    write_out(&nvs,2);
+  nvs->write_data();
+  if(nvs->get_counter() >= MAX_NVS_COUNTER){
+    write_out(state,nvs,1);
+    write_out(state,nvs,2);
   }
-  nvs.close();
-  Serial.printf("done in read.\n");
+  nvs->close();
   return(0);
 }
 

@@ -31,6 +31,6 @@ uint8_t PyranometerSensor::read(uint8_t* address){
   //1023 is max int for output
   int difference = abs(red_analog-black_analog);
   float total_radiation = ((difference*0.45)/1023)*5000;
-  *address=total_radiation;
+  len = float_to_bytes(address,total_radiation);
   return(len);
 }

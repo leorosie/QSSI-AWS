@@ -23,6 +23,5 @@ uint8_t TemperatureSensor::read(uint8_t* address){
       error_count <= MAX_TS_RETRIES);
   uint8_t len;
   len = float_to_bytes(address, tempC);
-  Serial.println(len);
   return(len);
 }

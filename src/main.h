@@ -13,31 +13,95 @@
 extern const int SD_CARD_1_SS;
 extern const int SD_CARD_2_SS;
 
-/** Handle any wakeup event (including power on).
-*   \param clock an RTC_container object, which contains methods that are
-*          useful for timed events.
-*   \see RTC_container::print_date()
-*   \return void
-*/
-void handle_wakeup(RTC_container);
-
-/** Arduino-required routine runs when powered on.
+/**
+*  \brief Handle any wakeup event (including power on).
+*  \param state A PowerState object ptr which switchs power rails and
+*         manages deep sleep.
+*  \param clock An RTC_container object ptr, which contains methods that are
+*         useful for timed events.
+*  \param nvs A NVS_container object ptr which wraps the chip's non-volatile
+*         storage for other components to easily access.
+*  \see RTC_container::print_date()
+*  \see PowerState::enter_sleep()
+*  \return void
 *
-*   Most of our logic will need to be in here since waking from ESP32 sleep is
-*   treated as power on; we will use esp_deep_sleep_wakeup_cause_t to figure
-*   out what woke up the chip and what should be done about it.
+*  Wakeup is a complex topic in ESP32 and I can't get into all the details
+*  in a simple comment. See the above sections of code for more information
+*  and the user manual for details.
+*/
+void handle_wakeup(PowerState* state, RTC_container* clock, NVS_container* nvs);
+
+/**
+*  \brief Arduino-required routine runs when powered on.
+*
+*  This Arduino-required function does some preliminary setup then calls our
+*  handle_wakeup routine to figure out what happens next. It is the owner
+*  of all of our semi-persistent objects.
 */
 void setup ();
 
-/** Arduino-required routine that loops forever after setup.
+/**
+*  \brief Arduino-required routine that loops forever after setup.
 *
-*   We shouldn't ever reach this function unless something goes drastically
-*   wrong with our code; we should wake up in setup, do stuff, and go back
-*   to sleep all without ever touching this loop.
+*  We shouldn't ever reach this function unless something goes drastically
+*  wrong with our code; we should wake up in setup, do stuff, and go back
+*  to sleep all without ever touching this loop.
 */
 void loop ();
 
-void do_restart_operations(RTC_container clock);
-void do_wake_operations(RTC_container clock);
-int write_out(NVS_container* nvs, int card_num);
-int read_sensors(RTC_container clock);
+/**
+*  \brief Default actions on RTC wakeup.
+*  \param state A PowerState object ptr which switchs power rails and
+*         manages deep sleep.
+*  \param clock An RTC_container object ptr, which contains methods that are
+*         useful for timed events.
+*  \param nvs A NVS_container object ptr which wraps the chip's non-volatile
+*         storage for other components to easily access.
+*  For now, this only calls a normal read cycle on our sensors but it could
+*  be expanded in the future to include other functionality.
+*/
+void do_wake_operations(PowerState* state, RTC_container* clock, NVS_container* nvs);
+
+/**
+*  \brief Actions for button wakeup.
+*  \param state A PowerState object ptr which switchs power rails and
+*         manages deep sleep.
+*  \param clock An RTC_container object ptr, which contains methods that are
+*         useful for timed events.
+*  \param nvs A NVS_container object ptr which wraps the chip's non-volatile
+*         storage for other components to easily access.
+*
+*  The board can be awakened by two buttons: a wifi button and a sd card button.
+*  This function figures out which one was pressed and starts the appropriate
+*  routines.
+*/
+void do_button_operations(PowerState* state, RTC_container* clock, NVS_container* nvs);
+
+/**
+*  \brief Write out the NVS to SD cards.
+*  \param state A PowerState object ptr which switchs power rails and
+*         manages deep sleep.
+*  \param nvs A NVS_container object ptr which wraps the chip's non-volatile
+*         storage for other components to easily access.
+*  \param card_num Identifier for the SD cards on the board.
+*
+*  In order to handle the erratic behavior of our SD cards, we need to do
+*  considerable error checking and have contingencies in application logic.
+*  This function takes care of much of that.
+*/
+int write_out(PowerState* state, NVS_container* nvs, int card_num);
+
+/**
+*  \brief Read from sensors and store data in NVS.
+*  \param state A PowerState object ptr which switchs power rails and
+*         manages deep sleep.
+*  \param clock An RTC_container object ptr, which contains methods that are
+*         useful for timed events.
+*  \param nvs A NVS_container object ptr which wraps the chip's non-volatile
+*         storage for other components to easily access.
+*
+*  This manages a lot of little objects but it's quite straightforward. It
+*  sets up a sensor, reads from it, and writes it into NVS. At the end, it
+*  checks to see if it needs to write_out() to SD cards.
+*/
+int read_sensors(PowerState* state, RTC_container* clock, NVS_container* nvs);

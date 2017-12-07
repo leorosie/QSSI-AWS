@@ -6,12 +6,10 @@ uint8_t NVS_container::setup(){
   this->zero_data();
   uint8_t sub_status = this->read_counter();
   if(sub_status != 0){
-    Serial.println("no existing counter; making it now");
     this->accessor.putShort("counter", 0);
   }
   sub_status = this->read_fails();
   if(sub_status != 0){
-    Serial.println("no existing fails; making it now");
     this->accessor.putShort("fails", 0);
   }
   return(status);
@@ -109,7 +107,6 @@ uint8_t NVS_container::read_fails(){
 
 uint8_t NVS_container::write_fails(){
   uint8_t status;
-  Serial.printf("Writing out fails as %hd\n",this->fails);
   this->accessor.putShort("fails",this->fails);
   return(status);
 }
@@ -125,7 +122,6 @@ uint8_t NVS_container::read_counter(){
 
 uint8_t NVS_container::write_counter(){
   uint8_t status;
-  Serial.printf("Writing out counter as %hd\n",this->counter);
   this->accessor.putShort("counter",this->counter);
   return(status);
 }
@@ -136,11 +132,11 @@ uint8_t NVS_container::clear(){
   is_cleared = this->accessor.clear();
   status = is_cleared ? 0 : -1;
   if(status == 0){
-    Serial.printf("NVS was cleared.\n");
     this->counter = 0;
     this->write_counter();
   } else {
-    Serial.printf("NVS was not cleared.\n");
+    //It doesn’t really matter what happens after that, does it?
+    //I mean, would knowing make it any easier? No. Knowing never does.
   }
   return(status);
 }
