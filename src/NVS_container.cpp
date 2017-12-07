@@ -6,8 +6,11 @@ uint8_t NVS_container::setup(){
   this->zero_data();
   uint8_t sub_status = this->read_counter();
   if(sub_status != 0){
-    Serial.println("no existing counter; making it now");
     this->accessor.putShort("counter", 0);
+  }
+  sub_status = this->read_fails();
+  if(sub_status != 0){
+    this->accessor.putShort("fails", 0);
   }
   return(status);
 }
@@ -15,6 +18,7 @@ uint8_t NVS_container::setup(){
 uint8_t NVS_container::close(){
   uint8_t status;
   this->write_counter();
+  this->write_fails();
   this->accessor.end();
   return(status);
 }
@@ -83,6 +87,30 @@ uint16_t NVS_container::get_counter(){
   return(this->counter);
 }
 
+uint16_t NVS_container::get_fails(){
+  return(this->fails);
+}
+
+uint8_t NVS_container::set_fails(uint16_t fails){
+  this->fails = fails;
+  return(0);
+}
+
+uint8_t NVS_container::read_fails(){
+  uint8_t status = 0;
+  this->fails = this->accessor.getShort("fails",0); //0 -> not found
+  //if(this->fails == 0){
+  //  status = -1;
+  //}
+  return(status);
+}
+
+uint8_t NVS_container::write_fails(){
+  uint8_t status;
+  this->accessor.putShort("fails",this->fails);
+  return(status);
+}
+
 uint8_t NVS_container::read_counter(){
   uint8_t status = 0;
   this->counter = this->accessor.getShort("counter",0); //0 -> not found
@@ -94,7 +122,6 @@ uint8_t NVS_container::read_counter(){
 
 uint8_t NVS_container::write_counter(){
   uint8_t status;
-  Serial.printf("Writing out counter as %hd\n",this->counter);
   this->accessor.putShort("counter",this->counter);
   return(status);
 }
@@ -107,6 +134,9 @@ uint8_t NVS_container::clear(){
   if(status == 0){
     this->counter = 0;
     this->write_counter();
+  } else {
+    //It doesn’t really matter what happens after that, does it?
+    //I mean, would knowing make it any easier? No. Knowing never does.
   }
   return(status);
 }
