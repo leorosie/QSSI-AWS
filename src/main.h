@@ -1,3 +1,7 @@
+#define CONFIG_MBEDTLS_HARDWARE_MPI 0
+#define CONFIG_MBEDTLS_DEBUG 1
+#define CONFIG_MBEDTLS_MPI_USE_INTERRUPT 0
+
 #include "pins.h"
 #include <Wire.h>
 
@@ -9,6 +13,7 @@
 #include "RTC_container.h"
 #include "NVS_container.h"
 #include "SD_container.h"
+#include "Wifi_container.h"
 
 extern const int SD_CARD_1_SS;
 extern const int SD_CARD_2_SS;
@@ -41,7 +46,15 @@ void handle_wakeup(PowerState* state, RTC_container* clock, NVS_container* nvs);
 void setup ();
 
 /**
-*  \brief Arduino-required routine that loops forever after setup.
+* \brief Start up our wifi code to share data.
+*
+* This optional mode will be entered when the user holds the wifi button to wake
+* the chip. It's quite likely that this code will not actually be used. It also
+* handles the transfer of data from NVS to the wifi module.
+*/
+void wifi_mode();
+
+/** Arduino-required routine that loops forever after setup.
 *
 *  We shouldn't ever reach this function unless something goes drastically
 *  wrong with our code; we should wake up in setup, do stuff, and go back
