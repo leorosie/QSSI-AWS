@@ -11,6 +11,7 @@ int8_t SonicRangeSensor::setup(){
 uint8_t SonicRangeSensor::read(uint8_t* address){
   uint8_t len;
   long pulse_value = pulseIn(SONIC_RANGER_BUS, HIGH);
+  Serial.println(pulse_value);
   len = long_to_bytes(address,pulse_value);
   return(len);
 }

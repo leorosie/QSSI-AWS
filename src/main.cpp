@@ -90,7 +90,7 @@ int write_out(PowerState* state, NVS_container* nvs, int card_num){
     sd.make_line(nvs,i);
   }
   sd.close();
-  if((nvs->get_fails() == 0) && (card_num == 2)){
+  if((nvs->get_fails() == 0) && (card_num == 1)){ //TODO change to 2 when fixed
     nvs->clear();
   }
   state->enter_basic_state();
@@ -113,7 +113,7 @@ int read_sensors(PowerState* state, RTC_container* clock, NVS_container* nvs){
   if (fails > 0){
     Serial.printf("last SD write failed; trying again now!\n");
     card1_status = write_out(state,nvs,1);
-    card2_status = write_out(state,nvs,2);
+    //card2_status = write_out(state,nvs,2);
     status = card1_status + card2_status;
     if (status == 0){
       Serial.printf("New write out was successful!\n");
@@ -153,7 +153,7 @@ int read_sensors(PowerState* state, RTC_container* clock, NVS_container* nvs){
   nvs->write_data();
   if(nvs->get_counter() >= MAX_NVS_COUNTER){
     write_out(state,nvs,1);
-    write_out(state,nvs,2);
+    //write_out(state,nvs,2);
   }
   nvs->close();
   return(0);
