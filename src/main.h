@@ -52,7 +52,7 @@ void setup ();
 * the chip. It's quite likely that this code will not actually be used. It also
 * handles the transfer of data from NVS to the wifi module.
 */
-void wifi_mode();
+void wifi_mode(PowerState* state, RTC_container* clock, NVS_container* nvs);
 
 /** Arduino-required routine that loops forever after setup.
 *
