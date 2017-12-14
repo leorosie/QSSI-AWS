@@ -34,7 +34,7 @@ void do_wake_operations(PowerState* state, RTC_container* clock, NVS_container* 
 
 void do_button_operations(PowerState* state, RTC_container* clock, NVS_container* nvs ){
   if(digitalRead(WIFI_STATION_SWITCH) == HIGH){
-    //start wifi (NOTE not in this branch yet)
+    wifi_mode(state, clock, nvs);
     while(digitalRead(WIFI_STATION_SWITCH) == HIGH); //let go of the button
   } else if (digitalRead(FLUSH_NVS_SWITCH) == HIGH) {
     write_out(state, nvs, 1);
@@ -157,47 +157,21 @@ int read_sensors(PowerState* state, RTC_container* clock, NVS_container* nvs){
   }
   nvs->close();
   return(0);
-  /*
-  nvs.close();
-
-  wifi_mode();
-
-  state.enter_sleep();
-  */
 }
 
-void wifi_mode(){
-  PowerState state;
-  state.enter_wifi_station_state();
-  NVS_container nvs;
-  nvs.setup();
-  nvs.read_data(nvs.get_counter()-1);
+void wifi_mode(PowerState* state, RTC_container* clock, NVS_container* nvs){
+  state->enter_wifi_station_state();
+  nvs->read_data(nvs->get_counter()-1);
   Wifi_container wifi;
-  memcpy(wifi.data.time_buf, nvs.data.time_buf, sizeof(nvs.data.time_buf));
-  memcpy(wifi.data.temp_buf, nvs.data.temp_buf, sizeof(nvs.data.temp_buf));
-  memcpy(wifi.data.snow_buf, nvs.data.snow_buf, sizeof(nvs.data.snow_buf));
-  memcpy(wifi.data.pyro_buf, nvs.data.pyro_buf, sizeof(nvs.data.pyro_buf));
-  nvs.close();
+  memcpy(wifi.data.time_buf, nvs->data.time_buf, sizeof(nvs->data.time_buf));
+  memcpy(wifi.data.temp_buf, nvs->data.temp_buf, sizeof(nvs->data.temp_buf));
+  memcpy(wifi.data.snow_buf, nvs->data.snow_buf, sizeof(nvs->data.snow_buf));
+  memcpy(wifi.data.pyro_buf, nvs->data.pyro_buf, sizeof(nvs->data.pyro_buf));
+  nvs->close();
   wifi.setup();
   wifi.host();
   wifi.close();
-}
-
-void wifi_mode(){
-  PowerState state;
-  state.enter_wifi_station_state();
-  NVS_container nvs;
-  nvs.setup();
-  nvs.read_data(nvs.get_counter()-1);
-  Wifi_container wifi;
-  memcpy(wifi.data.time_buf, nvs.data.time_buf, sizeof(nvs.data.time_buf));
-  memcpy(wifi.data.temp_buf, nvs.data.temp_buf, sizeof(nvs.data.temp_buf));
-  memcpy(wifi.data.snow_buf, nvs.data.snow_buf, sizeof(nvs.data.snow_buf));
-  memcpy(wifi.data.pyro_buf, nvs.data.pyro_buf, sizeof(nvs.data.pyro_buf));
-  nvs.close();
-  wifi.setup();
-  wifi.host();
-  wifi.close();
+  clock->setup();
 }
 
 void loop () {
