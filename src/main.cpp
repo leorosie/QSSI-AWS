@@ -34,7 +34,7 @@ void do_wake_operations(PowerState* state, RTC_container* clock, NVS_container* 
 
 void do_button_operations(PowerState* state, RTC_container* clock, NVS_container* nvs ){
   if(digitalRead(WIFI_STATION_SWITCH) == HIGH){
-    //start wifi (NOTE not in this branch yet)
+    wifi_mode(state, clock, nvs);
     while(digitalRead(WIFI_STATION_SWITCH) == HIGH); //let go of the button
   } else if (digitalRead(FLUSH_NVS_SWITCH) == HIGH) {
     write_out(state, nvs, 1);
@@ -90,7 +90,7 @@ int write_out(PowerState* state, NVS_container* nvs, int card_num){
     sd.make_line(nvs,i);
   }
   sd.close();
-  if((nvs->get_fails() == 0) && (card_num == 2)){
+  if((nvs->get_fails() == 0) && (card_num == 1)){ //TODO change to 2 when fixed
     nvs->clear();
   }
   state->enter_basic_state();
@@ -113,7 +113,7 @@ int read_sensors(PowerState* state, RTC_container* clock, NVS_container* nvs){
   if (fails > 0){
     Serial.printf("last SD write failed; trying again now!\n");
     card1_status = write_out(state,nvs,1);
-    card2_status = write_out(state,nvs,2);
+    //card2_status = write_out(state,nvs,2);
     status = card1_status + card2_status;
     if (status == 0){
       Serial.printf("New write out was successful!\n");
@@ -153,10 +153,25 @@ int read_sensors(PowerState* state, RTC_container* clock, NVS_container* nvs){
   nvs->write_data();
   if(nvs->get_counter() >= MAX_NVS_COUNTER){
     write_out(state,nvs,1);
-    write_out(state,nvs,2);
+    //write_out(state,nvs,2);
   }
   nvs->close();
   return(0);
+}
+
+void wifi_mode(PowerState* state, RTC_container* clock, NVS_container* nvs){
+  state->enter_wifi_station_state();
+  nvs->read_data(nvs->get_counter()-1);
+  Wifi_container wifi;
+  memcpy(wifi.data.time_buf, nvs->data.time_buf, sizeof(nvs->data.time_buf));
+  memcpy(wifi.data.temp_buf, nvs->data.temp_buf, sizeof(nvs->data.temp_buf));
+  memcpy(wifi.data.snow_buf, nvs->data.snow_buf, sizeof(nvs->data.snow_buf));
+  memcpy(wifi.data.pyro_buf, nvs->data.pyro_buf, sizeof(nvs->data.pyro_buf));
+  nvs->close();
+  wifi.setup();
+  wifi.host();
+  wifi.close();
+  clock->setup();
 }
 
 void loop () {
